@@ -39,6 +39,16 @@
 		B5DC4B182DD712E0005507A5 /* virtual-pet Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "virtual-pet Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"virtual-pet-Watch-App-Info.plist",
+			);
+			target = B5DC4B172DD712E0005507A5 /* virtual-pet Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B5DC4B0A2DD712E0005507A5 /* virtual-pet */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -47,6 +57,9 @@
 		};
 		B5DC4B1C2DD712E0005507A5 /* virtual-pet Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */,
+			);
 			path = "virtual-pet Watch App";
 			sourceTree = "<group>";
 		};
@@ -337,12 +350,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "virtual-pet Watch App/virtual-pet Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
@@ -367,12 +382,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "virtual-pet Watch App/virtual-pet Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
