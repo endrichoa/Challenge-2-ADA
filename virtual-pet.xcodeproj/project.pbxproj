@@ -40,12 +40,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */ = {
+		14EC06CD2DDE81790064590B /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"virtual-pet-Watch-App-Info.plist",
+				Fonts/dogica.ttf,
+				Fonts/dogicabold.ttf,
+				Fonts/dogicapixel.ttf,
+				Fonts/dogicapixelbold.ttf,
 			);
-			target = B5DC4B172DD712E0005507A5 /* virtual-pet Watch App */;
+			target = B5DC4B072DD712E0005507A5 /* virtual-pet */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -58,7 +61,7 @@
 		B5DC4B1C2DD712E0005507A5 /* virtual-pet Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */,
+				14EC06CD2DDE81790064590B /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */,
 			);
 			path = "virtual-pet Watch App";
 			sourceTree = "<group>";
@@ -351,14 +354,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "virtual-pet Watch App/virtual-pet Watch App.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 78X55K65WT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=watchos*]" = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "virtual-pet needs access to your health data to track workouts";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "virtual-pet needs to save your workout data to HealthKit";
+				INFOPLIST_KEY_NSMotionUsageDescription = "virtual-pet needs motion access to track your steps count";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -368,6 +376,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "shimpact.virtual-pet.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=watchos*]" = "Virtual Pet Provisioning - Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -383,14 +393,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "virtual-pet Watch App/virtual-pet Watch App.entitlements";
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 78X55K65WT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=watchos*]" = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "virtual-pet needs access to your health data to track workouts";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "virtual-pet needs to save your workout data to HealthKit";
+				INFOPLIST_KEY_NSMotionUsageDescription = "virtual-pet needs motion access to track your steps count";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -400,6 +415,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "shimpact.virtual-pet.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=watchos*]" = "Virtual Pet Provisioning - Watch";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -415,10 +432,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet/Preview Content\"";
-				DEVELOPMENT_TEAM = 78X55K65WT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
@@ -435,6 +454,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "shimpact.virtual-pet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Virtual Pet Provisioning";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -447,10 +468,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"virtual-pet/Preview Content\"";
-				DEVELOPMENT_TEAM = 78X55K65WT;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 78X55K65WT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
@@ -467,6 +490,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "shimpact.virtual-pet";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Virtual Pet Provisioning";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
