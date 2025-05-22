@@ -16,6 +16,7 @@ struct virtual_pet_Watch_AppApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environment(\.font, .custom("Dogica", size: 17, relativeTo: .body))
         }
     }
 }

@@ -16,7 +16,8 @@ struct PetView: View {
                 VStack {
                     ProgressView(value: vm.progressBarPercentage)
                     Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) steps")
-                        .font(.title3)
+                        .font(.custom("Dogica", size: 12, relativeTo: .title3))
+                        .kerning(-2)
                 }
             }
             .foregroundStyle(.black)

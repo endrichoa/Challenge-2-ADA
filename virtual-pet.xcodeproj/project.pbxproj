@@ -44,6 +44,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Features/Shop Page/View/ShopItemView.swift",
+				Fonts/dogica.otf,
 			);
 			target = B5DC4B072DD712E0005507A5 /* virtual-pet */;
 		};
