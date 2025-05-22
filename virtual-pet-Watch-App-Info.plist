@@ -4,16 +4,7 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-<<<<<<< HEAD
-		<string>Fonts/dogica.ttf</string>
-		<string>Fonts/dogicabold.ttf</string>
-		<string>Fonts/dogicapixel.ttf</string>
-		<string>Fonts/dogicapixelbold.ttf</string>
-=======
-		<string>dogica.otf</string>
->>>>>>> cha-25-work-on-the-main-screen
+		<string>dogica.ttf</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array/>
 </dict>
 </plist>
