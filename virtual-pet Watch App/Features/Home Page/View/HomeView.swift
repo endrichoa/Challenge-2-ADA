@@ -19,6 +19,12 @@ struct HomeView: View {
                     .tag(1)
             }
             .tabViewStyle(.page)
+            .onAppear() {
+                viewModel.fetchSteps()
+            }
+            .navigationDestination(isPresented: $viewModel.openEditPage) {
+                EditTargetView(vm: viewModel)
+            }
         }
     }
 }

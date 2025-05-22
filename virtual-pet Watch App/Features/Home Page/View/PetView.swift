@@ -14,14 +14,17 @@ struct PetView: View {
         VStack(spacing: 16) {
             Button(action: vm.onOpenEditPage) {
                 VStack {
-                    ProgressView(value: vm.progressBar)
-                    Text("\(vm.currentSteps.formatted())/\(vm.dailyStepsGoal.formatted()) steps")
-                        .font(.title3)
+                    ProgressView(value: vm.progressBarPercentage)
+                    Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) steps")
+                        .font(.custom("Dogica", size: 12, relativeTo: .title3))
+                        .kerning(-2)
                 }
             }
+            .foregroundStyle(.black)
+            .tint(.brown)
             .buttonStyle(.plain)
             .padding(.top, 32)
-            Circle()
+            Image("dog")
             HStack(alignment:.bottom, spacing: 40) {
                 VStack(alignment: .leading) {
                     Image(systemName: "heart.fill")
@@ -38,14 +41,17 @@ struct PetView: View {
                         .font(.caption2)
                 }
             }
+            .foregroundStyle(.black.opacity(0.8))
             .padding(.bottom, 16)
         }
-        .ignoresSafeArea()
         .padding(.horizontal, 8)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .navigationDestination(isPresented: $vm.openEditPage) {
-            EditTargetView(vm: vm)
-        }
+        .background(
+            Image("home-background")
+                .resizable()
+                .scaledToFill()
+        )
+        .ignoresSafeArea(.all)
+//        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

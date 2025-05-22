@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct ShopItemView: View {
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("Shop")
+            LazyVGrid(columns: columns) {
+                ForEach(0..<10) { index in
+                    VStack {
+                        Image(systemName: "heart.fill")
+                        Text("Item #\(index + 1)")
+                            .lineLimit(1)
+                    }
+                }
+            }
+        }
     }
 }
 
