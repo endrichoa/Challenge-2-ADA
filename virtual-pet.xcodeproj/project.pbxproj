@@ -44,6 +44,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Features/Shop Page/View/ShopItemView.swift",
+				Fonts/dogica.otf,
 			);
 			target = B5DC4B072DD712E0005507A5 /* virtual-pet */;
 		};
@@ -359,7 +360,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -391,7 +394,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
