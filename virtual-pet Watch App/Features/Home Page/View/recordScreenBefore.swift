@@ -72,7 +72,7 @@ struct RecordScreenBeforeView: View {
                     }
                     Button("Cancel", role: .cancel) {}
                 }
-                NavigationLink(destination: StartWorkoutView(), isActive: $navigateToWorkout) {
+                NavigationLink(destination: WorkoutTabView(), isActive: $navigateToWorkout) {
                     EmptyView()
                 }
                 .opacity(0)

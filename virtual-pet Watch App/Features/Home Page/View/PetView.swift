@@ -50,7 +50,7 @@ struct PetView: View {
         }
         .padding(.horizontal, 8)
         .background(
-            Image("home-background")
+            Image("HomeScreen")
                 .resizable()
                 .scaledToFill()
         )

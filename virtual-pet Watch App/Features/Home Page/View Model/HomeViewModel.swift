@@ -67,4 +67,32 @@ class HomeViewModel {
         UserDefaults.standard.set(selectedDailyTarget, forKey: "daily_target")
         dailyTarget = selectedDailyTarget
     }
+    
+    // Add steps from workout
+     func addSteps(_ steps: Int) {
+         currentSteps += steps
+         // Save to persistent storage if needed
+         saveSteps()
+     }
+     
+     // Save steps to UserDefaults or other storage
+     private func saveSteps() {
+         UserDefaults.standard.set(currentSteps, forKey: "currentSteps")
+     }
+     
+     // Load steps from storage
+     func loadSteps() {
+         currentSteps = UserDefaults.standard.integer(forKey: "currentSteps")
+     }
+     
+     // Reset steps (e.g., at midnight)
+     func resetSteps() {
+         currentSteps = 0
+         saveSteps()
+     }
+     
+     // Initialize with stored data
+     init() {
+         loadSteps()
+     }
 }
