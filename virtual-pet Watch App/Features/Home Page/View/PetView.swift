@@ -13,36 +13,40 @@ struct PetView: View {
     var body: some View {
         VStack(spacing: 16) {
             Button(action: vm.onOpenEditPage) {
-                VStack {
+                VStack(spacing: 8) {
                     ProgressView(value: vm.progressBarPercentage)
-                    Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) steps")
-                        .font(.custom("Dogica", size: 12, relativeTo: .title3))
-                        .kerning(-2)
+                    Text("\(vm.totalSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS")
+                        .font(.custom("Dogica Pixel", size: 11, relativeTo: .title3))
                 }
             }
             .foregroundStyle(.black)
-            .tint(.brown)
+            .tint(.black)
             .buttonStyle(.plain)
             .padding(.top, 32)
             Image("dog")
             HStack(alignment:.bottom, spacing: 40) {
-                VStack(alignment: .leading) {
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 24))
-                        .frame(height: 24)
-                    Text("\(vm.happinessLevel)%")
-                        .font(.caption2)
+                NavigationLink(destination: ShopItemView()) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 24))
+                            .frame(height: 24)
+                        Text("\(vm.happinessLevel)%")
+                    }
                 }
-                VStack(alignment: .leading) {
-                    Image(systemName: "fork.knife")
-                        .font(.system(size: 24))
-                        .frame(height: 24)
-                    Text("\(vm.hungerLevel)%")
-                        .font(.caption2)
+                .buttonStyle(.plain)
+                NavigationLink(destination: ShopItemView()) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 24))
+                            .frame(height: 24)
+                        Text("\(vm.hungerLevel)%")
+                    }
                 }
+                .buttonStyle(.plain)
             }
-            .foregroundStyle(.black.opacity(0.8))
-            .padding(.bottom, 16)
+            .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+            .foregroundStyle(.black)
+            .padding(.bottom, 40)
         }
         .padding(.horizontal, 8)
         .background(
@@ -51,7 +55,6 @@ struct PetView: View {
                 .scaledToFill()
         )
         .ignoresSafeArea(.all)
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
