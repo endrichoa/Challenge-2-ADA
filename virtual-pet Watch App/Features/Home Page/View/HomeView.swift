@@ -31,11 +31,17 @@ struct HomeView: View {
                 HistoryView()
                     .tag(1)
             }
+            .tabViewStyle(.page)
+            .onAppear() {
+                viewModel.fetchSteps()
+                viewModel.updateSteps()
+            }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .navigationDestination(isPresented: $viewModel.openEditPage) {
                 EditTargetView(vm: viewModel)
             }
         }
+        .fontWeight(.bold)
     }
 }
 

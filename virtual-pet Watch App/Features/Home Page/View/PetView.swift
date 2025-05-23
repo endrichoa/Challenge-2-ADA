@@ -11,54 +11,42 @@ struct PetView: View {
     @State var vm: HomeViewModel
     
     var body: some View {
-        VStack {
-            Spacer()
-                .frame(height: 40)
+        VStack(spacing: 16) {
             Button(action: vm.onOpenEditPage) {
-                VStack {
+                VStack(spacing: 8) {
                     ProgressView(value: vm.progressBarPercentage)
-                    Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) steps")
-                        .font(.custom("Dogica", size: 12, relativeTo: .title3))
-                        .kerning(-2)
+                    Text("\(vm.totalSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS")
+                        .font(.custom("Dogica Pixel", size: 11, relativeTo: .title3))
                 }
             }
             .foregroundStyle(.black)
-            .tint(.brown)
+            .tint(.black)
             .buttonStyle(.plain)
-            
-            Spacer()
-                .frame(height: 20)
-            
-            Image("dogChar")
-                .resizable()
-                .frame(width: 120, height: 120)
-            
-            Spacer()
-                .frame(height: 20)
-            
+            .padding(.top, 32)
+            Image("dog")
             HStack(alignment:.bottom, spacing: 40) {
-                VStack(alignment: .leading) {
-                    Image(systemName: "heart.fill")
-                        .font(.system(size: 24))
-                        .frame(height: 24)
-                    Text("\(vm.happinessLevel)%")
-                        .font(.caption2)
+                NavigationLink(destination: ShopItemView()) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "heart.fill")
+                            .font(.system(size: 24))
+                            .frame(height: 24)
+                        Text("\(vm.happinessLevel)%")
+                    }
                 }
-                .offset(x: -10, y:-20 )
-
-                VStack(alignment: .leading) {
-                    Image(systemName: "fork.knife")
-                        .font(.system(size: 24))
-                        .frame(height: 24)
-                    Text("\(vm.hungerLevel)%")
-                        .font(.caption2)
+                .buttonStyle(.plain)
+                NavigationLink(destination: ShopItemView()) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 24))
+                            .frame(height: 24)
+                        Text("\(vm.hungerLevel)%")
+                    }
                 }
-                .offset(x: 10, y:-20 )
+                .buttonStyle(.plain)
             }
-            .foregroundStyle(.black.opacity(0.8))
-            
-            Spacer()
-                .frame(height: 20)
+            .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+            .foregroundStyle(.black)
+            .padding(.bottom, 40)
         }
         .padding(.horizontal, 8)
         .background(

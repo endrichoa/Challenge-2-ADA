@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EditTargetView: View {
     @State var vm: HomeViewModel
-    private let range = stride(from: 1000, through: 50000, by: 1000).map{ $0 }
+    private let range = stride(from: 8000, through: 50000, by: 1000).map { $0 }
+    
     var body: some View {
         VStack {
             Picker("Steps Goal", selection: $vm.selectedDailyTarget) {
