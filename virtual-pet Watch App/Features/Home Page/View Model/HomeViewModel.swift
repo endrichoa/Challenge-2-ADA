@@ -14,11 +14,15 @@ class HomeViewModel {
     private let pedometer = CMPedometer()
     
     // Variables
-    var currentSteps: Int = 5432
+    var initialSteps: Int = 0
+    var currentSteps: Int = 0
+    var totalSteps: Int {
+        return initialSteps + currentSteps
+    }
     var dailyTarget: Int = UserDefaults.standard.integer(forKey: "daily_target")
     var selectedDailyTarget: Int = 20000
     var progressBarPercentage: Double {
-        return Double(currentSteps) / Double(dailyTarget)
+        return Double(totalSteps) / Double(dailyTarget)
     }
     
     // Pet stats
@@ -36,14 +40,24 @@ class HomeViewModel {
     }
     
     func fetchSteps() {
-        let calendar = Calendar.current
-        let startOfToday = calendar.startOfDay(for: Date())
-        let now = Date()
-        
-        pedometer.queryPedometerData(from: startOfToday, to: now) { [weak self] data, error in
-            DispatchQueue.main.async {
-                if let steps = data?.numberOfSteps.intValue {
-                    self?.currentSteps = steps
+        HealthKitHelper.shared.requestAuthorization { [weak self] authorized in
+            guard authorized else {
+                print("HealthKit not authorized")
+                return
+            }
+            HealthKitHelper.shared.fetchTodayStepCount { [weak self] steps in
+                DispatchQueue.main.async {
+                    self?.initialSteps = steps ?? 0
+                }
+            }
+        }
+    }
+    
+    func updateSteps() {
+        pedometer.startUpdates(from: Date()) { [weak self] data, error in
+            if let steps = data?.numberOfSteps {
+                DispatchQueue.main.async {
+                    self?.currentSteps = Int(truncating: steps)
                 }
             }
         }

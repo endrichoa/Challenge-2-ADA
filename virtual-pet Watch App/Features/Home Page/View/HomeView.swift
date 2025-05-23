@@ -21,11 +21,13 @@ struct HomeView: View {
             .tabViewStyle(.page)
             .onAppear() {
                 viewModel.fetchSteps()
+                viewModel.updateSteps()
             }
             .navigationDestination(isPresented: $viewModel.openEditPage) {
                 EditTargetView(vm: viewModel)
             }
         }
+        .fontWeight(.bold)
     }
 }
 

@@ -5,6 +5,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>dogica.otf</string>
+		<string>dogicapixel.ttf</string>
+		<string>dogicapixelbold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>
