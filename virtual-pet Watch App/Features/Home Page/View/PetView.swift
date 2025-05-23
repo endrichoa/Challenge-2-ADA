@@ -11,7 +11,9 @@ struct PetView: View {
     @State var vm: HomeViewModel
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack {
+            Spacer()
+                .frame(height: 40)
             Button(action: vm.onOpenEditPage) {
                 VStack {
                     ProgressView(value: vm.progressBarPercentage)
@@ -23,8 +25,17 @@ struct PetView: View {
             .foregroundStyle(.black)
             .tint(.brown)
             .buttonStyle(.plain)
-            .padding(.top, 32)
-            Image("dog")
+            
+            Spacer()
+                .frame(height: 20)
+            
+            Image("dogChar")
+                .resizable()
+                .frame(width: 120, height: 120)
+            
+            Spacer()
+                .frame(height: 20)
+            
             HStack(alignment:.bottom, spacing: 40) {
                 VStack(alignment: .leading) {
                     Image(systemName: "heart.fill")
@@ -33,6 +44,8 @@ struct PetView: View {
                     Text("\(vm.happinessLevel)%")
                         .font(.caption2)
                 }
+                .offset(x: -10, y:-20 )
+
                 VStack(alignment: .leading) {
                     Image(systemName: "fork.knife")
                         .font(.system(size: 24))
@@ -40,9 +53,12 @@ struct PetView: View {
                     Text("\(vm.hungerLevel)%")
                         .font(.caption2)
                 }
+                .offset(x: 10, y:-20 )
             }
             .foregroundStyle(.black.opacity(0.8))
-            .padding(.bottom, 16)
+            
+            Spacer()
+                .frame(height: 20)
         }
         .padding(.horizontal, 8)
         .background(
@@ -51,7 +67,6 @@ struct PetView: View {
                 .scaledToFill()
         )
         .ignoresSafeArea(.all)
-//        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
