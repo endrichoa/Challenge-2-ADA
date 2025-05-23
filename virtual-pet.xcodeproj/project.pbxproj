@@ -40,12 +40,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */ = {
+		B56053282DDC5D63003DC582 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"virtual-pet-Watch-App-Info.plist",
+				"Features/Shop Page/View/ShopItemView.swift",
+				Fonts/dogica.otf,
 			);
-			target = B5DC4B172DD712E0005507A5 /* virtual-pet Watch App */;
+			target = B5DC4B072DD712E0005507A5 /* virtual-pet */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -58,7 +59,7 @@
 		B5DC4B1C2DD712E0005507A5 /* virtual-pet Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B5DC4C7D2DDB1043005507A5 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet Watch App" target */,
+				B56053282DDC5D63003DC582 /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */,
 			);
 			path = "virtual-pet Watch App";
 			sourceTree = "<group>";
@@ -359,7 +360,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -391,7 +394,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
