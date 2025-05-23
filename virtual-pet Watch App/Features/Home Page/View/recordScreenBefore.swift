@@ -17,37 +17,38 @@ struct RecordScreenBeforeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Pixel-art style background placeholder
-                LinearGradient(gradient: Gradient(colors: [Color(red: 0.7, green: 0.9, blue: 1.0), Color(red: 0.4, green: 0.7, blue: 0.4)]), startPoint: .top, endPoint: .bottom)
+                Image("home-background")
+                    .resizable()
+                    .scaledToFill()
                     .ignoresSafeArea()
                 VStack(spacing: 0) {
                     Spacer().frame(height: 24)
-                    // Title
                     Text("READY TO WALK?")
-                        .font(.custom("dogica", size: 20))
-                        .foregroundColor(Color(red: 0.33, green: 0.18, blue: 0.13))
+                        .font(.custom("dogica pixel", size: 20))
+                        .kerning(-2)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color(hex: "#1A0F23"))
                         .padding(.bottom, 6)
                         .padding(.horizontal, 8)
-                    // Subtitle
                     Text("TOUCH TO RECORD")
                         .font(.custom("dogica", size: 14))
-                        .foregroundColor(Color(red: 0.33, green: 0.18, blue: 0.13))
+                        .kerning(-2)
+                        .foregroundColor(Color(hex: "#1A0F23"))
                         .padding(.bottom, 18)
                         .padding(.horizontal, 8)
                     Spacer()
-                    // Dog Image
                     Image("dogChar")
                         .interpolation(.none)
                         .scaledToFit()
                         .frame(width: 90, height: 45)
                         .padding(.bottom, 24)
-                    // Steps Remaining
                     Text("4,833 STEPS REMAINING")
-                        .font(.custom("dogica", size: 14))
-                        .foregroundColor(Color(red: 0.33, green: 0.18, blue: 0.13))
+                        .font(.custom("dogica", size: 10))
+                        .lineLimit(1)
+                        .foregroundColor(Color(hex: "#1A0F23"))
                         .padding(.bottom, 8)
                         .padding(.horizontal, 8)
-                    // Progress Bar
+                        .kerning(-2)
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color(red: 0.33, green: 0.18, blue: 0.13), lineWidth: 3)

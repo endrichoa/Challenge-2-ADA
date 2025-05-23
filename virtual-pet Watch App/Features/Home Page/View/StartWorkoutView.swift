@@ -30,21 +30,24 @@ struct StartWorkoutView: View {
     
     var body: some View {
         ZStack {
-            // Pixel-art style background placeholder
-            LinearGradient(gradient: Gradient(colors: [Color(red: 0.7, green: 0.9, blue: 1.0), Color(red: 0.4, green: 0.7, blue: 0.4)]), startPoint: .top, endPoint: .bottom)
+            Image("home-background")
+                .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
                 Spacer().frame(height: -20)
                 // Steps Count
                 Text("\(workoutManager.steps)")
-                    .font(.custom("dogica", size: 32))
-                    .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
+                    .font(.custom("dogica pixel", size: 32))
+                    .foregroundColor(Color(hex: "#1A0F23"))
+
                     .padding(.bottom, 2)
                 // Steps Walked Label
                 Text("STEPS WALKED")
-                    .font(.custom("dogica", size: 18))
-                    .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
+                    .font(.custom("dogica pixel", size: 18))
+                    .foregroundColor(Color(hex: "#1A0F23"))
+
                     .padding(.bottom, 8)
                 Spacer()
                 // Metrics and Dog Row
@@ -56,25 +59,22 @@ struct StartWorkoutView: View {
                             .frame(width: 20, height: 20)
                             .foregroundColor(.red)
                         Text("\(Int(workoutManager.heartRate))")
-                            .font(.custom("dogica", size: 14))
+                            .font(.custom("dogica pixel", size: 14))
+                            .fontWeight(.bold)
+
                             .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
-                    // Dog Image (smaller frame, bigger dog)
                     Image("dogChar")
                         .interpolation(.none)
                         .scaledToFit()
                         .frame(width: 91, height: 60)
                         .padding(.horizontal, 8)
-                    // Distance (icon above, value below)
                     VStack(spacing: 4) {
-                        Image(systemName: "figure.walk")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.blue)
                         Text(formatDistance(workoutManager.distance))
-                            .font(.custom("dogica", size: 14))
-                            .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
+                            .font(.custom("dogica pixel", size: 14))
+                            .foregroundColor(Color(hex: "#1A0F23"))
+
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -83,9 +83,10 @@ struct StartWorkoutView: View {
                 Spacer()
                 // Timer
                 Text(formatTime(workoutManager.elapsedSeconds))
-                    .font(.custom("dogica", size: 32))
-                    .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
+                    .font(.custom("dogica pixel", size: 32))
+                    .foregroundColor(Color(hex: "#1A0F23"))
                     .padding(.bottom, 32)
+
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

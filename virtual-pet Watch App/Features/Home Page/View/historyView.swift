@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HistoryView: View {
+
     // Placeholder/mock data for now
     let currentStreak = 9
     let goalsReached = 17
