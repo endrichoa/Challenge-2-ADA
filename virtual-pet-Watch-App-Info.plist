@@ -4,9 +4,8 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>dogica.otf</string>
+		<string>dogica.ttf</string>
+		<string>dogicabold.ttf</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array/>
 </dict>
 </plist>

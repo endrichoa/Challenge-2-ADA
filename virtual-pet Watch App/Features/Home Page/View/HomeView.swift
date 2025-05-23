@@ -13,7 +13,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             TabView(selection: $viewModel.selectedTab) {
-                StartWorkoutView()
+                RecordScreenBeforeView()
                     .tag(0)
                 PetView(vm: viewModel)
                     .tag(1)
