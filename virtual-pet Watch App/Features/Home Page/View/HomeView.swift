@@ -9,13 +9,26 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
+    @State private var selectedVerticalTab = 0
     
     var body: some View {
         NavigationStack {
-            TabView(selection: $viewModel.selectedTab) {
-                StartWorkoutView()
-                    .tag(0)
-                PetView(vm: viewModel)
+            TabView(selection: $selectedVerticalTab) {
+                // Main content
+                TabView(selection: $viewModel.selectedTab) {
+                    RecordScreenBeforeView()
+                        .tag(0)
+                    PetView(vm: viewModel)
+                        .tag(1)
+                }
+                .tabViewStyle(.page)
+                .onAppear() {
+                    viewModel.fetchSteps()
+                }
+                .tag(0)
+                
+                // History View
+                HistoryView()
                     .tag(1)
             }
             .tabViewStyle(.page)
@@ -23,6 +36,7 @@ struct HomeView: View {
                 viewModel.fetchSteps()
                 viewModel.updateSteps()
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
             .navigationDestination(isPresented: $viewModel.openEditPage) {
                 EditTargetView(vm: viewModel)
             }
