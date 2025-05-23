@@ -14,12 +14,29 @@ class HealthKitHelper {
     private let healthStore = HKHealthStore()
     
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
+        // The quantity types to read from HealthKit
         let typesToRead: Set<HKObjectType> = [
-            HKQuantityType(.heartRate),
-            HKQuantityType(.stepCount)
+            HKObjectType.quantityType(forIdentifier: .heartRate)!,
+            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKQuantityType(.stepCount),
+            HKObjectType.workoutType()
         ]
         
-        healthStore.requestAuthorization(toShare: [], read: typesToRead) { success, error in
+        // The quantity types to share with HealthKit
+        let typesToShare: Set<HKSampleType> = [
+            HKObjectType.quantityType(forIdentifier: .heartRate)!,
+            HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
+            HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+            HKObjectType.quantityType(forIdentifier: .stepCount)!, // Added for step tracking
+            HKObjectType.workoutType()
+        ]
+//        let typesToRead: Set<HKObjectType> = [
+//            HKQuantityType(.heartRate),
+//            HKQuantityType(.stepCount)
+//        ]
+        
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
             if let error = error {
                 // handle errors
                 print("Failed to authorize HealthKit: \(error.localizedDescription)")

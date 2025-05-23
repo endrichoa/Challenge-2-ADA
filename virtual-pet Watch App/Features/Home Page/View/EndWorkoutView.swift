@@ -26,18 +26,18 @@ struct EndWorkoutView: View {
             
             VStack {
                 
-                HStack  {
+                HStack(spacing: 12)  {
                     
                     VStack  {
                         
                         Button(action:  {
                             workoutManager.pauseWorkout()
                         })  {
-                            Image("PauseButton")
+                            Image("pausebutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
-                                .buttonStyle(.plain)
                         }
+                        .buttonStyle(.plain)
                         
                         Text("Pause")
                             .font(.custom("Dogica", size: 10, relativeTo: .title))
@@ -51,12 +51,12 @@ struct EndWorkoutView: View {
                             showingSummaryView = true
                             
                         })  {
-                            Image("EndButton")
+                            Image("endbutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
-                                .buttonStyle(.plain)
                             
                         }
+                        .buttonStyle(.plain)
                         Text("End")
                             .font(.custom("Dogica", size: 10, relativeTo: .title3))
                             .foregroundColor(Color(hex: "#44211B"))

@@ -4,8 +4,12 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>dogica.ttf</string>
 		<string>dogicapixel.ttf</string>
+		<string>dogicapixelbold.ttf</string>
+		<string>dogica.ttf</string>
+		<string>dogicabold.ttf</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array/>
 </dict>
 </plist>
