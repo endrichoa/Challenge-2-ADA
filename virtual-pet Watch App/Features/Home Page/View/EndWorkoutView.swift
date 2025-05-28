@@ -11,7 +11,7 @@ struct EndWorkoutView: View {
     
     @State var vm: HomeViewModel
     @ObservedObject var workoutManager: WorkoutManager
-    @State private var showingSummaryView = false
+    @State private var navigateSummaryView = false
 
     // button formatting
     let buttonSize: CGFloat = 80
@@ -21,10 +21,16 @@ struct EndWorkoutView: View {
         
         ZStack {
             
-            Color(hex: "#69CCED")
-                .ignoresSafeArea()
             
-            VStack {
+            Image("HomeScreen")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                .blur(radius: 2)
+            
+            
+            
+            VStack(spacing: 20) {
                 
                 HStack(spacing: 12)  {
                     
@@ -48,7 +54,7 @@ struct EndWorkoutView: View {
                     VStack  {
                         Button(action:  {
                             workoutManager.endWorkout()
-                            showingSummaryView = true
+                            navigateSummaryView = true
                             
                         })  {
                             Image("endbutton")
@@ -64,7 +70,6 @@ struct EndWorkoutView: View {
                     
                 }
                 
-                Spacer()
                 
                 
                 VStack {
@@ -79,17 +84,17 @@ struct EndWorkoutView: View {
                 }
             }
         }
-            
-            
-        .fullScreenCover(isPresented: $showingSummaryView)  {
-            WorkoutSummaryView(workoutManager: workoutManager, vm: vm)
-        }
         
-        .onChange(of: workoutManager.showingSummaryView) {
-            showingSummaryView = workoutManager.showingSummaryView
+        
+        NavigationLink(destination: WorkoutSummaryView(workoutManager: workoutManager, vm: vm),
+                       isActive: $navigateSummaryView) {
+            EmptyView()
         }
-    
+        .hidden()
+
+        
     }
+    
 }
 
 
