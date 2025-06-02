@@ -36,33 +36,42 @@ struct EndWorkoutView: View {
                     
                     VStack  {
                         
-                        Button(action:  {
-                            workoutManager.pauseWorkout()
-                        })  {
-                            Image("pausebutton")
+                        Button(action: {
+                            // Toggle between pause and resume based on current state
+                            if workoutManager.running {
+                                workoutManager.pauseWorkout()
+                            } else {
+                                workoutManager.resumeWorkout()
+                            }
+                        }) {
+                            // Show different images based on workout state
+                            Image(workoutManager.running ? "pausebutton" : "playbutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
                         }
                         .buttonStyle(.plain)
+                        .disabled(!workoutManager.canPauseWorkout() && !workoutManager.canResumeWorkout())
                         
-                        Text("Pause")
+                        // Show different text based on workout state
+                        Text(workoutManager.running ? "Pause" : "Resume")
                             .font(.custom("Dogica", size: 10, relativeTo: .title))
                             .foregroundColor(Color(hex: "#44211B"))
                         
                     }
                     
                     VStack  {
-                        Button(action:  {
-                            workoutManager.endWorkout()
-                            navigateSummaryView = true
-                            
-                        })  {
+                        NavigationLink(destination: WorkoutSummaryView(workoutManager: workoutManager, vm: vm),
+                                       isActive: $navigateSummaryView) {
                             Image("endbutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
-                            
                         }
                         .buttonStyle(.plain)
+                        .simultaneousGesture(TapGesture().onEnded {
+                            workoutManager.endWorkout()
+                            navigateSummaryView = true
+                        })
+                        
                         Text("End")
                             .font(.custom("Dogica", size: 10, relativeTo: .title3))
                             .foregroundColor(Color(hex: "#44211B"))
@@ -72,26 +81,20 @@ struct EndWorkoutView: View {
                 
                 
                 
-                VStack {
-                    ProgressView(value: vm.progressBarPercentage)
-                        .padding(.horizontal, 10)
-                        .tint(.black)
-                    Spacer().frame(height:7)
-                    Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) steps")
-                        .font(.custom("Dogica", size: 10, relativeTo: .title3))
-                        .foregroundColor(Color(hex: "#44211B"))
-                        .kerning(-2)
+                Button(action: vm.onOpenEditPage) {
+                    VStack(spacing: 8) {
+                        ProgressView(value: vm.progressBarPercentage)
+                        Text("\(vm.currentSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS")
+                            .font(.custom("Dogica", size: 10, relativeTo: .title3))
+                            .kerning(-2)
+                    }
                 }
+                .foregroundStyle(Color(hex: "#44211B"))
+                .tint(.black)
+                .buttonStyle(.plain)
+                .padding(.horizontal, 100)
             }
         }
-        
-        
-        NavigationLink(destination: WorkoutSummaryView(workoutManager: workoutManager, vm: vm),
-                       isActive: $navigateSummaryView) {
-            EmptyView()
-        }
-        .hidden()
-
         
     }
     
@@ -101,4 +104,3 @@ struct EndWorkoutView: View {
 #Preview {
     EndWorkoutView(vm: HomeViewModel(), workoutManager: WorkoutManager())
 }
-

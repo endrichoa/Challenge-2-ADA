@@ -10,6 +10,16 @@ import Foundation
 import HealthKit
 import WorkoutKit
 
+struct CoinBreakdown {
+    let stepCoins: Int
+    let distanceCoins: Int
+    let timeCoins: Int
+    let heartRateBonus: Int
+    let achievementMultiplier: Double
+    let finalCoins: Int
+}
+
+
 class WorkoutManager: NSObject, ObservableObject {
     
     // Published properties to update the UI
@@ -22,9 +32,9 @@ class WorkoutManager: NSObject, ObservableObject {
     @Published var activeCalories: Double = 0
     @Published var distance: Double = 0
     @Published var elapsedSeconds: Int = 0
-    @Published var steps: Int = 0 // Added for step tracking
+    @Published var steps: Int = 0
     
-    // Workout staate
+    // Workout state
     @Published var running = false
     
     // Session state control
@@ -35,8 +45,11 @@ class WorkoutManager: NSObject, ObservableObject {
     @Published var totalDistance: Double = 0
     @Published var totalCalories: Double = 0
     @Published var totalDuration: TimeInterval = 0
-    @Published var totalSteps: Int = 0 // Added for step tracking
+    @Published var totalSteps: Int = 0
     @Published var workoutDate: Date = Date()
+    
+    // Coins earned for this workout
+    @Published var coinsEarned: Int = 0
     
     // Timer for updating the elapsed time
     var timer = Timer()
@@ -44,9 +57,7 @@ class WorkoutManager: NSObject, ObservableObject {
     // Step counter instance
     private let stepTracker = StepTrackerCM()
     
-    // Request authorization to access HealthKit
     func requestAuthorization() {
-        // The quantity types to read from HealthKit
         let typesToRead: Set<HKObjectType> = [
             HKObjectType.quantityType(forIdentifier: .heartRate)!,
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
@@ -55,95 +66,91 @@ class WorkoutManager: NSObject, ObservableObject {
             HKObjectType.workoutType()
         ]
         
-        // The quantity types to share with HealthKit
         let typesToShare: Set<HKSampleType> = [
             HKObjectType.quantityType(forIdentifier: .heartRate)!,
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
             HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
-            HKObjectType.quantityType(forIdentifier: .stepCount)!, // Added for step tracking
+            HKObjectType.quantityType(forIdentifier: .stepCount)!,
             HKObjectType.workoutType()
         ]
         
-        // Request authorization
-        HKHealthStore().requestAuthorization(toShare: typesToShare, read: typesToRead) { (success, error) in
+        HKHealthStore().requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
             if let error = error {
-                print("Error requesting HealthKit authorization: \(error.localizedDescription)")
+                print("HealthKit auth error: \(error.localizedDescription)")
             }
         }
     }
     
-    // Start the workout session
+    var totalDistanceInKM: Double {
+        return totalDistance / 1000
+    }
+
+    
     func startWorkout() {
         guard let workoutType = selectedWorkout else { return }
         
-        // Configure the workout session
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = workoutType
         configuration.locationType = .outdoor
         
-        // Create the session and builder
         do {
             session = try HKWorkoutSession(healthStore: HKHealthStore(), configuration: configuration)
             builder = session?.associatedWorkoutBuilder()
             
-            // Configure the builder with step count
             let dataSource = HKLiveWorkoutDataSource(healthStore: HKHealthStore(), workoutConfiguration: configuration)
             if let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) {
                 dataSource.enableCollection(for: stepType, predicate: nil)
             }
             builder?.dataSource = dataSource
             
-            // Start the workout session
             session?.delegate = self
             builder?.delegate = self
             
-            // Start the session and builder
             let startDate = Date()
             session?.startActivity(with: startDate)
-            builder?.beginCollection(withStart: startDate) { (success, error) in
+            builder?.beginCollection(withStart: startDate) { success, error in
                 if let error = error {
-                    print("Error beginning collection: \(error.localizedDescription)")
+                    print("Begin collection error: \(error.localizedDescription)")
                     return
                 }
                 
-                // Start the timer and update the running state
                 DispatchQueue.main.async {
                     self.running = true
                     self.startTimer()
-                    // Start step counting
                     self.stepTracker.startCounting()
                 }
             }
         } catch {
-            print("Error starting workout: \(error.localizedDescription)")
-            return
+            print("Start workout error: \(error.localizedDescription)")
         }
     }
     
-    // Pause the workout session
     func pauseWorkout() {
-        session?.pause()
-        running = false
+        guard let session = session, session.state == .running else { return }
+        session.pause()
+        DispatchQueue.main.async {
+            self.running = false
+        }
         timer.invalidate()
         stepTracker.pauseCounting()
     }
     
-    // Resume the workout session
     func resumeWorkout() {
-        session?.resume()
-        running = true
+        guard let session = session, session.state == .paused else { return }
+        session.resume()
+        DispatchQueue.main.async {
+            self.running = true
+        }
         startTimer()
         stepTracker.startCounting()
     }
     
-    // End the workout session
     func endWorkout() {
         session?.end()
         timer.invalidate()
         stepTracker.stopCounting()
     }
     
-    // Reset the workout session
     func resetWorkout() {
         selectedWorkout = nil
         session = nil
@@ -154,110 +161,58 @@ class WorkoutManager: NSObject, ObservableObject {
         heartRate = 0
         distance = 0
         steps = 0
+        coinsEarned = 0
         showingSummaryView = false
         timer.invalidate()
         stepTracker.reset()
     }
     
-    // Start the timer to update the elapsed time
     private func startTimer() {
+        timer.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            self?.elapsedSeconds += 1
-            // Update steps from step tracker
-            self?.steps = self?.stepTracker.totalSteps ?? 0
+            guard let self = self else { return }
+            if self.running && self.session?.state == .running {
+                self.elapsedSeconds += 1
+                self.steps = self.stepTracker.totalSteps
+            }
+        }
+        RunLoop.current.add(timer, forMode: .common)
+    }
+    
+    func canPauseWorkout() -> Bool {
+        return session?.state == .running
+    }
+    
+    func canResumeWorkout() -> Bool {
+        return session?.state == .paused
+    }
+    
+    func getSessionStateString() -> String {
+        guard let session = session else { return "No Session" }
+        switch session.state {
+        case .notStarted: return "Not Started"
+        case .running: return "Running"
+        case .paused: return "Paused"
+        case .stopped: return "Stopped"
+        case .ended: return "Ended"
+        @unknown default: return "Unknown"
         }
     }
     
-    // Update the metrics from the workout builder
     func updateForStatistics(_ statistics: HKStatistics?) {
         guard let statistics = statistics else { return }
-        
         DispatchQueue.main.async {
             switch statistics.quantityType {
             case HKQuantityType.quantityType(forIdentifier: .heartRate):
-                let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-                self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-                
+                let unit = HKUnit.count().unitDivided(by: .minute())
+                self.heartRate = statistics.mostRecentQuantity()?.doubleValue(for: unit) ?? 0
             case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
-                let energyUnit = HKUnit.kilocalorie()
-                self.activeCalories = statistics.sumQuantity()?.doubleValue(for: energyUnit) ?? 0
-                
+                self.activeCalories = statistics.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
             case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
-                let meterUnit = HKUnit.meter()
-                self.distance = statistics.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-                
+                self.distance = statistics.sumQuantity()?.doubleValue(for: .meter()) ?? 0
             case HKQuantityType.quantityType(forIdentifier: .stepCount):
-                let stepsUnit = HKUnit.count()
-                if let sumQuantity = statistics.sumQuantity() {
-                    self.steps = Int(sumQuantity.doubleValue(for: stepsUnit))
-                } else if let mostRecentQuantity = statistics.mostRecentQuantity() {
-                    self.steps = Int(mostRecentQuantity.doubleValue(for: stepsUnit))
-                }
-                
-            default:
-                return
-            }
-        }
-    }
-    
-    // Collect the workout summary
-    func collectWorkoutSummary() {
-        guard let session = session else { return }
-        
-        workoutDate = Date()
-        // Safely unwrap the startDate before using timeIntervalSince
-        if let startDate = session.startDate {
-            totalDuration = Date().timeIntervalSince(startDate)
-        } else {
-            totalDuration = 0
-        }
-        
-        // Use the builder's statistics to get metrics
-        if let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate),
-           let statistics = builder?.statistics(for: heartRateType) {
-            let heartRateUnit = HKUnit.count().unitDivided(by: .minute())
-            averageHeartRate = statistics.averageQuantity()?.doubleValue(for: heartRateUnit) ?? 0
-        }
-        
-        if let caloriesType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned),
-           let statistics = builder?.statistics(for: caloriesType) {
-            let energyUnit = HKUnit.kilocalorie()
-            totalCalories = statistics.sumQuantity()?.doubleValue(for: energyUnit) ?? 0
-        }
-        
-        if let distanceType = HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning),
-           let statistics = builder?.statistics(for: distanceType) {
-            let meterUnit = HKUnit.meter()
-            totalDistance = statistics.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-        }
-        
-        // Update total steps from step tracker
-        totalSteps = stepTracker.totalSteps
-    }
-}
-
-// MARK: - HKWorkoutSessionDelegate
-extension WorkoutManager: HKWorkoutSessionDelegate {
-    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
-        DispatchQueue.main.async {
-            switch toState {
-            case .running:
-                self.running = true
-            case .paused:
-                self.running = false
-            case .ended:
-                self.showingSummaryView = true
-                self.collectWorkoutSummary()
-                self.builder?.endCollection(withEnd: date) { (success, error) in
-                    if let error = error {
-                        print("Error ending collection: \(error.localizedDescription)")
-                    }
-                    
-                    self.builder?.finishWorkout { (workout, error) in
-                        if let error = error {
-                            print("Error finishing workout: \(error.localizedDescription)")
-                        }
-                    }
+                if let sum = statistics.sumQuantity() {
+                    self.steps = Int(sum.doubleValue(for: .count()))
                 }
             default:
                 break
@@ -265,23 +220,111 @@ extension WorkoutManager: HKWorkoutSessionDelegate {
         }
     }
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
-        print("Workout session failed with error: \(error.localizedDescription)")
+    func collectWorkoutSummary() {
+        guard let session = session else { return }
+        workoutDate = Date()
+        if let startDate = session.startDate {
+            totalDuration = Date().timeIntervalSince(startDate)
+        }
+        if let hrStats = builder?.statistics(for: .quantityType(forIdentifier: .heartRate)!) {
+            averageHeartRate = hrStats.averageQuantity()?.doubleValue(for: .count().unitDivided(by: .minute())) ?? 0
+        }
+        if let calStats = builder?.statistics(for: .quantityType(forIdentifier: .activeEnergyBurned)!) {
+            totalCalories = calStats.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
+        }
+        if let distStats = builder?.statistics(for: .quantityType(forIdentifier: .distanceWalkingRunning)!) {
+            totalDistance = distStats.sumQuantity()?.doubleValue(for: .meter()) ?? 0
+        }
+        totalSteps = stepTracker.totalSteps
+        coinsEarned = calculateCoinsEarned()
+    }
+    
+    func calculateCoinsEarned() -> Int {
+        var total = 0
+        let km = totalDistance / 1000
+        let stepCoins = totalSteps / 100
+        let distCoins = Int(km * 10)
+        let timeCoins = elapsedSeconds / 60
+        let base = stepCoins + distCoins + timeCoins
+        total += base
+        total += calculateHeartRateBonus()
+        total = Int(Double(total) * calculateAchievementMultiplier())
+        return max(total, 1)
+    }
+    
+    private func calculateHeartRateBonus() -> Int {
+        guard averageHeartRate > 0 else { return 0 }
+        let targetMin: Double = 120
+        let targetMax: Double = 160
+        let km = totalDistance / 1000
+        let base = (totalSteps / 100) + Int(km * 10) + (elapsedSeconds / 60)
+        if averageHeartRate >= targetMin && averageHeartRate <= targetMax {
+            return Int(Double(base) * 0.2)
+        } else if averageHeartRate > 100 && averageHeartRate < 180 {
+            return Int(Double(base) * 0.1)
+        }
+        return 0
+    }
+    
+    private func calculateAchievementMultiplier() -> Double {
+        var multiplier = 1.0
+        let km = totalDistance / 1000
+        if elapsedSeconds >= 1800 { multiplier += 0.25 }
+        if totalSteps >= 10000 { multiplier += 0.5 }
+        if km >= 5.0 { multiplier += 0.3 }
+        return multiplier
+    }
+    
+    func getCoinBreakdown() -> CoinBreakdown {
+        let km = totalDistance / 1000
+        let stepCoins = totalSteps / 100
+        let distCoins = Int(km * 10)
+        let timeCoins = elapsedSeconds / 60
+        let heartBonus = calculateHeartRateBonus()
+        let base = stepCoins + distCoins + timeCoins + heartBonus
+        let multiplier = calculateAchievementMultiplier()
+        let total = max(Int(Double(base) * multiplier), 1)
+        return CoinBreakdown(
+            stepCoins: stepCoins,
+            distanceCoins: distCoins,
+            timeCoins: timeCoins,
+            heartRateBonus: heartBonus,
+            achievementMultiplier: multiplier,
+            finalCoins: total
+        )
     }
 }
 
-// MARK: - HKLiveWorkoutBuilderDelegate
-extension WorkoutManager: HKLiveWorkoutBuilderDelegate {
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
-        for type in collectedTypes {
-            guard let quantityType = type as? HKQuantityType else { return }
-            
-            let statistics = workoutBuilder.statistics(for: quantityType)
-            updateForStatistics(statistics)
+// MARK: - HKWorkoutSessionDelegate & HKLiveWorkoutBuilderDelegate
+
+extension WorkoutManager: HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate {
+    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
+        print("Session changed from \(fromState) to \(toState)")
+        if toState == .ended {
+            builder?.endCollection(withEnd: date) { success, error in
+                self.builder?.finishWorkout { _, _ in
+                    DispatchQueue.main.async {
+                        self.collectWorkoutSummary()
+                        self.showingSummaryView = true
+                    }
+                }
+            }
         }
     }
-    
+
+    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
+        print("Workout session error: \(error.localizedDescription)")
+    }
+
     func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {
-        // Handle workout events if needed
+        // Optional: handle workout events
+    }
+
+    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+        for type in collectedTypes {
+            guard let quantityType = type as? HKQuantityType else { continue }
+            let stats = workoutBuilder.statistics(for: quantityType)
+            updateForStatistics(stats)
+        }
     }
 }
