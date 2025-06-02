@@ -11,41 +11,51 @@ struct PetView: View {
     @State var vm: HomeViewModel
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack {
             Button(action: vm.onOpenEditPage) {
-                VStack {
-                    ProgressView(value: vm.progressBar)
-                    Text("\(vm.currentSteps.formatted())/\(vm.dailyStepsGoal.formatted()) steps")
-                        .font(.title3)
-                }
+                ProgressBar(
+                    progress: vm.progressBarPercentage,
+                    text: "\(vm.totalSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS"
+                )
             }
             .buttonStyle(.plain)
-            .padding(.top, 32)
-            Circle()
-            HStack(alignment:.bottom, spacing: 40) {
-                VStack(alignment: .leading) {
+            Spacer()
+            Image("dogChar")
+                .interpolation(.none)
+                .scaledToFit()
+                .frame(width: 90, height: 45)
+                .scaleEffect(x: -1, y: 1)
+                .padding(.bottom, 20)
+            HStack(alignment:.bottom, spacing: 52) {
+                NavigationLink(destination: StoreView()) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Image(systemName: "fork.knife")
+                            .font(.system(size: 24))
+                            .frame(height: 24)
+                        Text("\(vm.hungerLevel)%")
+                    }
+                }
+                .buttonStyle(.plain)
+                VStack(alignment: .leading, spacing: 8) {
                     Image(systemName: "heart.fill")
                         .font(.system(size: 24))
                         .frame(height: 24)
                     Text("\(vm.happinessLevel)%")
-                        .font(.caption2)
-                }
-                VStack(alignment: .leading) {
-                    Image(systemName: "fork.knife")
-                        .font(.system(size: 24))
-                        .frame(height: 24)
-                    Text("\(vm.hungerLevel)%")
-                        .font(.caption2)
                 }
             }
-            .padding(.bottom, 16)
+            .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+            .foregroundStyle(.black)
+            .padding(.bottom, 32)
         }
         .ignoresSafeArea()
+        .frame(maxHeight: .infinity)
         .padding(.horizontal, 8)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .navigationDestination(isPresented: $vm.openEditPage) {
-            EditTargetView(vm: vm)
-        }
+        .background(
+            Image("HomeScreen")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+        )
     }
 }
 
