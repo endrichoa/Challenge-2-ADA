@@ -12,7 +12,9 @@ struct WorkoutSummaryView: View {
      @State var vm: HomeViewModel
      @Environment(\.dismiss) private var dismiss
     
+    
     var body: some View {
+        
         ZStack {
 
             Image("SummaryBackground")
@@ -162,6 +164,7 @@ struct WorkoutSummaryView: View {
         }
         .navigationBarHidden(true)
     }
+
     
     
     // Format duration from seconds to HH:MM:SS or MM:SS for shorter workouts

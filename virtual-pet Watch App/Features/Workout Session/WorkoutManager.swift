@@ -237,6 +237,17 @@ class WorkoutManager: NSObject, ObservableObject {
         }
         totalSteps = stepTracker.totalSteps
         coinsEarned = calculateCoinsEarned()
+        
+        addCoins(coinsEarned: coinsEarned)
+    }
+    
+    // COINS
+    var coins: Int = UserDefaults.standard.integer(forKey: "coins")
+    
+    func addCoins(coinsEarned: Int) {
+        coins += coinsEarned
+        UserDefaults.standard.set(coins, forKey: "coins")
+
     }
     
     func calculateCoinsEarned() -> Int {
