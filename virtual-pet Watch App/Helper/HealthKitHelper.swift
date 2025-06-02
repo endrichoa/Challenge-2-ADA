@@ -31,11 +31,6 @@ class HealthKitHelper {
             HKObjectType.quantityType(forIdentifier: .stepCount)!, // Added for step tracking
             HKObjectType.workoutType()
         ]
-//        let typesToRead: Set<HKObjectType> = [
-//            HKQuantityType(.heartRate),
-//            HKQuantityType(.stepCount)
-//        ]
-        
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
             if let error = error {
                 // handle errors
@@ -71,5 +66,98 @@ class HealthKitHelper {
                 completion(totalSteps)
             }
         healthStore.execute(queryStepCount)
+    }
+    
+    func requestAuthorizationiOS(completion: @escaping (Bool) -> Void) {
+        // The quantity types to read from HealthKit
+        let typesToRead: Set<HKObjectType> = [
+            HKQuantityType(.heartRate),
+            HKQuantityType(.activeEnergyBurned),
+            HKQuantityType(.distanceWalkingRunning),
+            HKQuantityType(.stepCount),
+            HKObjectType.workoutType()
+        ]
+        
+        healthStore.requestAuthorization(toShare: [], read: typesToRead) { success, error in
+            if let error = error {
+                // handle errors
+                print("Failed to authorize HealthKit: \(error.localizedDescription)")
+                completion(false)
+            }
+            completion(success)
+        }
+    }
+    
+    func fetchWeeklySteps(completion: @escaping ([StepModel]) -> Void) {
+        guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
+            print("1: error completion empty array")
+            completion([])
+            return
+        }
+
+        let calendar = Calendar.current
+        let now = Date()
+        let startDate = calendar.date(byAdding: .day, value: -6, to: calendar.startOfDay(for: now))!
+        let interval = DateComponents(day: 1)
+
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: now, options: .strictStartDate)
+
+        let query = HKStatisticsCollectionQuery(
+            quantityType: stepType,
+            quantitySamplePredicate: predicate,
+            options: .cumulativeSum,
+            anchorDate: calendar.startOfDay(for: now),
+            intervalComponents: interval
+        )
+        print("2: initialize query")
+        query.initialResultsHandler = { query, results, error in
+            var stepData: [StepModel] = []
+            
+            if let statsCollection = results {
+                print("3: enumerate statistics")
+                statsCollection.enumerateStatistics(from: startDate, to: now) { statistics, _ in
+                    print("4: append step")
+                    let steps = statistics.sumQuantity()?.doubleValue(for: .count()) ?? 0
+                    stepData.append(StepModel(date: statistics.startDate, stepCount: steps))
+                }
+            }
+            DispatchQueue.main.async {
+                print("6: call completion")
+                print("step data: $\(stepData)")
+                completion(stepData)
+            }
+        }
+        
+        healthStore.execute(query)
+    }
+
+    
+    func fetchWorkoutHistory(completion: @escaping ([HKWorkout]) -> Void) {
+        let calendar = Calendar.current
+        let now = Date()
+        let startOfWeek = calendar.date(byAdding: .day, value: -7, to: now)
+        
+        let workoutType = HKObjectType.workoutType()
+        
+        let predicate = HKQuery.predicateForSamples(
+            withStart: startOfWeek,
+            end: now,
+            options: .strictStartDate
+        )
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(
+            sampleType: workoutType,
+            predicate: predicate,
+            limit: 0,
+            sortDescriptors: [sortDescriptor]
+        ) { _, samples, error in
+            guard let workouts = samples as? [HKWorkout], error == nil else {
+                print("Error fetching workouts: \(error?.localizedDescription ?? "Unknown error")")
+                completion([])
+                return
+            }
+            completion(workouts)
+        }
+        healthStore.execute(query)
     }
 }
