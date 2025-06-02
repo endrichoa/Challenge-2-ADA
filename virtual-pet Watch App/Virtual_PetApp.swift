@@ -10,7 +10,12 @@ import SwiftUI
 @main
 struct virtual_pet_Watch_AppApp: App {
     init() {
-        UserDefaults.standard.register(defaults: ["daily_target": 20000])
+        UserDefaults.standard.register(
+            defaults: [
+                "daily_target": 20000,
+                "coins": 20
+            ]
+        )
     }
     
     var body: some Scene {

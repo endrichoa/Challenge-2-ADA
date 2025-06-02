@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct EditTargetView: View {
+    @Environment(\.dismiss) var dismiss
     @State var vm: HomeViewModel
+    
     private let range = stride(from: 8000, through: 50000, by: 1000).map { $0 }
     
     var body: some View {
@@ -20,7 +22,12 @@ struct EditTargetView: View {
                 }
             }
             .pickerStyle(.wheel)
-            Button(action: vm.updateStepTarget) {
+            Button(
+                action: {
+                    vm.updateStepTarget()
+                    dismiss()
+                }
+            ) {
                 Text("Done")
             }
         }
