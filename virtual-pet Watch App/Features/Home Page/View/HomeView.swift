@@ -6,42 +6,70 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
-    @State private var selectedVerticalTab = 0
+    @StateObject private var walkDetectionManager = WalkDetectionManager()
+    @State private var showWalkDetection = false
+    @State private var navigateToWorkout = false
     
     var body: some View {
         NavigationStack {
-            TabView(selection: $selectedVerticalTab) {
-                // Main content
-                TabView(selection: $viewModel.selectedTab) {
-                    RecordScreenBeforeView()
-                        .tag(0)
+            TabView(selection: $viewModel.selectedTab) {
+                RecordScreenBeforeView(navigateToWorkout: $navigateToWorkout)
+                    .tag(0)
+                TabView {
                     PetView(vm: viewModel)
-                        .tag(1)
+                    HistoryView(vm: HistoryViewModel(dailyGoal: viewModel.dailyTarget, last7Days: []), dailyGoal: viewModel.dailyTarget)
                 }
-                .tabViewStyle(.page)
-                .onAppear() {
-                    viewModel.fetchSteps()
-                }
-                .tag(0)
-                
-                // History View
-                HistoryView()
-                    .tag(1)
+                .tabViewStyle(.verticalPage)
+                .tag(1)
             }
             .tabViewStyle(.page)
             .onAppear() {
                 viewModel.fetchSteps()
                 viewModel.updateSteps()
+                if !navigateToWorkout {
+                    walkDetectionManager.startDetection()
+                }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
             .navigationDestination(isPresented: $viewModel.openEditPage) {
                 EditTargetView(vm: viewModel)
             }
+            .confirmationDialog("Start your walk?", isPresented: $showWalkDetection) {
+                Button("Start", role: .none) {
+                    navigateToWorkout = true
+                }
+                Button("Cancel", role: .cancel) {}
+            }
+            .navigationDestination(isPresented: $navigateToWorkout) {
+                WorkoutTabView()
+                    .onAppear {
+                        walkDetectionManager.stopDetection()
+                    }
+            }
         }
         .fontWeight(.bold)
+        .onAppear {
+            walkDetectionManager.onWalkDetected = {
+                WKInterfaceDevice.current().play(.notification)
+                showWalkDetection = true
+            }
+            if !navigateToWorkout {
+                walkDetectionManager.startDetection()
+            }
+        }
+        .onDisappear {
+            walkDetectionManager.stopDetection()
+        }
+        .onChange(of: navigateToWorkout) { newValue in
+            if newValue {
+                walkDetectionManager.stopDetection()
+            } else {
+                walkDetectionManager.startDetection()
+            }
+        }
     }
 }
 
