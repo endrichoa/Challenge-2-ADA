@@ -11,5 +11,9 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>
+	<key>WKInterfaceOrientation</key>
+	<string>Portrait</string>
+	<key>WKInterfaceOrientationLandscape</key>
+	<string>Landscape</string>
 </dict>
 </plist>
