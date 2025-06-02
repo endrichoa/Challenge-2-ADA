@@ -11,30 +11,23 @@ struct PetView: View {
     @State var vm: HomeViewModel
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack {
             Button(action: vm.onOpenEditPage) {
-                VStack(spacing: 8) {
-                    ProgressView(value: vm.progressBarPercentage)
-                    Text("\(vm.totalSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS")
-                        .font(.custom("Dogica Pixel", size: 11, relativeTo: .title3))
-                }
+                ProgressBar(
+                    progress: vm.progressBarPercentage,
+                    text: "\(vm.totalSteps.formatted())/\(vm.dailyTarget.formatted()) STEPS"
+                )
             }
-            .foregroundStyle(.black)
-            .tint(.black)
             .buttonStyle(.plain)
-            .padding(.top, 32)
-            Image("dog")
-            HStack(alignment:.bottom, spacing: 40) {
-                NavigationLink(destination: ShopItemView()) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 24))
-                            .frame(height: 24)
-                        Text("\(vm.happinessLevel)%")
-                    }
-                }
-                .buttonStyle(.plain)
-                NavigationLink(destination: ShopItemView()) {
+            Spacer()
+            Image("dogChar")
+                .interpolation(.none)
+                .scaledToFit()
+                .frame(width: 90, height: 45)
+                .scaleEffect(x: -1, y: 1)
+                .padding(.bottom, 20)
+            HStack(alignment:.bottom, spacing: 52) {
+                NavigationLink(destination: StoreView()) {
                     VStack(alignment: .leading, spacing: 8) {
                         Image(systemName: "fork.knife")
                             .font(.system(size: 24))
@@ -43,18 +36,26 @@ struct PetView: View {
                     }
                 }
                 .buttonStyle(.plain)
+                VStack(alignment: .leading, spacing: 8) {
+                    Image(systemName: "heart.fill")
+                        .font(.system(size: 24))
+                        .frame(height: 24)
+                    Text("\(vm.happinessLevel)%")
+                }
             }
             .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
             .foregroundStyle(.black)
-            .padding(.bottom, 40)
+            .padding(.bottom, 32)
         }
+        .ignoresSafeArea()
+        .frame(maxHeight: .infinity)
         .padding(.horizontal, 8)
         .background(
             Image("HomeScreen")
                 .resizable()
                 .scaledToFill()
+                .ignoresSafeArea()
         )
-        .ignoresSafeArea(.all)
     }
 }
 

@@ -350,7 +350,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need health permission to access step count and heart rate.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need health permission to update step count.";
-				INFOPLIST_KEY_NSMotionUsageDescription = "We need motion permission to detect your steps in real time.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
@@ -390,7 +390,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "We need health permission to access step count and heart rate.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need health permission to update step count.";
-				INFOPLIST_KEY_NSMotionUsageDescription = "We need motion permission to detect your steps in real time.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
