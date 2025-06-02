@@ -33,33 +33,13 @@ struct StoreView: View {
                                 .foregroundStyle(.black)
                                 .padding(.leading, 16)
                         }
-                        Image("coin")
+                        Image("Coin")
                             .resizable()
                             .frame(width: 26, height: 26)
                     }
-//                    .padding(.horizontal, 16)
                 }
                 .padding(.horizontal, 16)
-//                ZStack(alignment: .bottomLeading) {
-//                    ZStack {
-//                        Image("coin-placeholder")
-//                            .resizable()
-//                            .frame(width: 72, height: 24)
-//                        Text("234")
-//                            .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
-//                            .fontWeight(.bold)
-//                            .foregroundStyle(.black)
-//                            .padding(.leading, 16)
-//                    }
-//                    Image("coin")
-//                        .resizable()
-//                        .frame(width: 26, height: 26)
-//                }
-//                .padding(.horizontal, 16)
                 VStack {
-//                    Text("STORE")
-//                        .font(.custom("Dogica Pixel", size: 20, relativeTo: .headline))
-//                        .fontWeight(.bold)
                     LazyVGrid(columns: columns, spacing: 8) {
                         ForEach(vm.items) { item in
                             NavigationLink(
@@ -77,7 +57,7 @@ struct StoreView: View {
                                         .multilineTextAlignment(.center)
                                         .frame(height: 24)
                                     HStack(spacing: 8) {
-                                        Image("coin")
+                                        Image("Coin")
                                         Text("\(item.price)")
                                     }
                                 }

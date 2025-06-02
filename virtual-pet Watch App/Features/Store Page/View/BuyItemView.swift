@@ -31,7 +31,7 @@ struct BuyItemView: View {
             ) {
                 HStack {
                     Text("BUY")
-                    Image("coin")
+                    Image("Coin")
                     Text("\(item.price)")
                 }
             }

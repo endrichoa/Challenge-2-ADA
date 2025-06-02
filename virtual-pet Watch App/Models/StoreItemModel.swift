@@ -20,9 +20,9 @@ struct StoreItemModel: Identifiable {
     }
     
     static let items: [StoreItemModel] = [
-        .init(name: "Canned Food", image: "canned-food", price: 3),
-        .init(name: "Chicken", image: "drumstick", price: 2),
-        .init(name: "Meat", image: "meat", price: 5),
-        .init(name: "Biscuit", image: "cookies", price: 2)
+        .init(name: "Canned Food", image: "CannedFood", price: 3),
+        .init(name: "Chicken", image: "Drumstick", price: 2),
+        .init(name: "Meat", image: "Meat", price: 5),
+        .init(name: "Biscuit", image: "Cookies", price: 2)
     ]
 }
