@@ -192,21 +192,6 @@ struct ActionButton: View {
 
 
 
-struct ProgressBar: View {
-    @State var progress: Double = 0
-    @State var text: String = ""
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            ProgressView(value: progress)
-            Text(text)
-                .font(.custom("Dogica Pixel", size: 11, relativeTo: .title3))
-        }
-        .foregroundStyle(.black)
-        .tint(.black)
-        .padding(.top, 32)
-    }
-}
 
 #Preview {
     RecordScreenBeforeView(navigateToWorkout: .constant(false))
