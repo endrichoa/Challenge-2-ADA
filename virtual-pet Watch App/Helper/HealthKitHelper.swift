@@ -68,6 +68,37 @@ class HealthKitHelper {
         healthStore.execute(queryStepCount)
     }
     
+    func fetchStepsForLast7Days(completion: @escaping ([StepDay]) -> Void) {
+        let calendar = Calendar.current
+        let now = Date()
+        var days: [StepDay] = Array(repeating: StepDay(date: now, steps: 0), count: 7)
+        let group = DispatchGroup()
+        
+        for i in 0..<7 {
+            group.enter()
+            let date = calendar.date(byAdding: .day, value: -i, to: now)!
+            let startOfDay = calendar.startOfDay(for: date)
+            let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+            let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
+            
+            let query = HKStatisticsQuery(
+                quantityType: HKQuantityType(.stepCount),
+                quantitySamplePredicate: predicate,
+                options: .cumulativeSum
+            ) { _, statistics, _ in
+                let steps = statistics?.sumQuantity()?.doubleValue(for: .count()) ?? 0
+                days[i] = StepDay(date: startOfDay, steps: Int(steps))
+                group.leave()
+            }
+            healthStore.execute(query)
+        }
+        
+        group.notify(queue: .main) {
+            // Sort by date ascending
+            let sorted = days.sorted { $0.date < $1.date }
+            completion(sorted)
+        }
+    
     func requestAuthorizationiOS(completion: @escaping (Bool) -> Void) {
         // The quantity types to read from HealthKit
         let typesToRead: Set<HKObjectType> = [
