@@ -98,6 +98,7 @@ class HealthKitHelper {
             let sorted = days.sorted { $0.date < $1.date }
             completion(sorted)
         }
+    }
     
     func requestAuthorizationiOS(completion: @escaping (Bool) -> Void) {
         // The quantity types to read from HealthKit
@@ -125,14 +126,14 @@ class HealthKitHelper {
             completion([])
             return
         }
-
+        
         let calendar = Calendar.current
         let now = Date()
         let startDate = calendar.date(byAdding: .day, value: -6, to: calendar.startOfDay(for: now))!
         let interval = DateComponents(day: 1)
-
+        
         let predicate = HKQuery.predicateForSamples(withStart: startDate, end: now, options: .strictStartDate)
-
+        
         let query = HKStatisticsCollectionQuery(
             quantityType: stepType,
             quantitySamplePredicate: predicate,
@@ -161,7 +162,7 @@ class HealthKitHelper {
         
         healthStore.execute(query)
     }
-
+    
     
     func fetchWorkoutHistory(completion: @escaping ([HKWorkout]) -> Void) {
         let calendar = Calendar.current
