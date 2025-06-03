@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PetView: View {
+    @Binding var path: [Route]
     @State var vm: HomeViewModel
     
     var body: some View {
@@ -27,7 +28,7 @@ struct PetView: View {
                 .scaleEffect(x: -1, y: 1)
                 .padding(.bottom, 20)
             HStack(alignment:.bottom, spacing: 52) {
-                NavigationLink(destination: StoreView()) {
+                Button(action: { path.append(.store) }) {
                     VStack(alignment: .leading, spacing: 8) {
                         Image(systemName: "fork.knife")
                             .font(.system(size: 24))
@@ -60,5 +61,5 @@ struct PetView: View {
 }
 
 #Preview {
-    PetView(vm: HomeViewModel())
+    PetView(path: .constant([]), vm: HomeViewModel())
 }

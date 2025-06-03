@@ -10,10 +10,10 @@ import SwiftUI
 import WatchKit
 
 struct RecordScreenBeforeView: View {
-    @Binding var navigateToWorkout: Bool
+    @Binding var path: [Route]
+    
     @State private var viewModel = HomeViewModel()
     @State private var progress: Double = 0.65
-    @State private var showConfirmation = false
     @State private var showCountdown = false
     @State private var countdownValue = 3
     @State private var countdownProgress: CGFloat = 1.0
@@ -72,17 +72,13 @@ struct RecordScreenBeforeView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
             .onTapGesture {
-                showConfirmation = true
+                showCountdown = true
+                startCountdown()
             }
-            .confirmationDialog("Start your walk?", isPresented: $showConfirmation, titleVisibility: .visible) {
-                Button("Start", role: .none) {
-                    startCountdown()
-                }
-                Button("Cancel", role: .cancel) {}
-            }
+            // Walk detection
             .alert("Are you walking?", isPresented: $showWalkDetection) {
                 Button("Start Workout", role: .none) {
-                    navigateToWorkout = true
+                    path.append(.workout)
                 }
                 Button("Not Now", role: .cancel) {}
             } message: {
@@ -147,7 +143,7 @@ struct RecordScreenBeforeView: View {
             } else {
                 timer.invalidate()
                 showCountdown = false
-                navigateToWorkout = true
+                path.append(.workout)
                 WKInterfaceDevice.current().play(.success)
             }
         }
@@ -194,5 +190,5 @@ struct ActionButton: View {
 
 
 #Preview {
-    RecordScreenBeforeView(navigateToWorkout: .constant(false))
+    RecordScreenBeforeView(path: .constant([]))
 }

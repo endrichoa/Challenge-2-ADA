@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StoreView: View {
+    @Binding var path: [Route]
+    
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -90,5 +92,5 @@ struct StoreView: View {
 }
 
 #Preview {
-    StoreView()
+    StoreView(path: .constant([.store]))
 }
