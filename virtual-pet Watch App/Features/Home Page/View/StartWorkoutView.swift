@@ -1,14 +1,7 @@
-//
-//  StartWorkoutView.swift
-//  virtual-pet Watch App
-//
-//  Created by Hanna Nadia Savira on 20/05/25.
-//
-
 import SwiftUI
 
 struct StartWorkoutView: View {
-    @StateObject var workoutManager = WorkoutManager()
+    @ObservedObject var workoutManager: WorkoutManager // CHANGED FROM @StateObject
     @State private var animationOffset: CGFloat = 0
     @State private var cloudAnimationOffset: CGFloat = -100
     @State private var grassAnimationOffset: CGFloat = -300
@@ -41,7 +34,7 @@ struct StartWorkoutView: View {
                     .scaledToFill()
                     .ignoresSafeArea()
                 
-                // Slow-moving clouds
+                // Slow-moving clouds - automatically pause/resume based on workout state
                 Image("CloudBackground")
                     .resizable()
                     .scaledToFill()
@@ -49,12 +42,20 @@ struct StartWorkoutView: View {
                     .offset(x: cloudAnimationOffset, y: 7)
                     .ignoresSafeArea()
                     .onAppear {
-                        withAnimation(.linear(duration: 500).repeatForever(autoreverses: false)) {
-                            cloudAnimationOffset = -geometry.size.width * 2
+                        startCloudAnimation(geometry: geometry)
+                    }
+                    .onChange(of: workoutManager.running) { _, isRunning in
+                        if isRunning && !workoutManager.isPaused {
+                            startCloudAnimation(geometry: geometry)
+                        }
+                    }
+                    .onChange(of: workoutManager.isPaused) { _, isPaused in
+                        if !isPaused && workoutManager.running {
+                            startCloudAnimation(geometry: geometry)
                         }
                     }
                 
-                // Fast-moving grass
+                // Fast-moving grass - automatically pause/resume based in workout state
                 Image("GrassBackground")
                     .resizable()
                     .scaledToFill()
@@ -62,8 +63,16 @@ struct StartWorkoutView: View {
                     .offset(x: grassAnimationOffset, y: 5)
                     .ignoresSafeArea()
                     .onAppear {
-                        withAnimation(.linear(duration: 75).repeatForever(autoreverses: false)) {
-                            grassAnimationOffset = -geometry.size.width * 2
+                        startGrassAnimation(geometry: geometry)
+                    }
+                    .onChange(of: workoutManager.running) { _, isRunning in
+                        if isRunning && !workoutManager.isPaused {
+                            startGrassAnimation(geometry: geometry)
+                        }
+                    }
+                    .onChange(of: workoutManager.isPaused) { _, isPaused in
+                        if !isPaused && workoutManager.running {
+                            startGrassAnimation(geometry: geometry)
                         }
                     }
             }
@@ -97,11 +106,15 @@ struct StartWorkoutView: View {
                             .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
-                    Image("dogChar")
+                    
+                    // Dog character - changes based in workout state
+                    Image("dogChar") // You can add pause state later: workoutManager.isPaused ? "dogCharPaused" : "dogChar"
                         .interpolation(.none)
                         .scaledToFit()
                         .frame(width: 91, height: 60)
                         .padding(.horizontal, 8)
+                        .opacity(workoutManager.isPaused ? 0.7 : 1.0)
+                    
                     VStack(spacing: 4) {
                         Text(formatDistance(workoutManager.distance))
                             .font(.custom("dogica pixel", size: 14))
@@ -112,22 +125,45 @@ struct StartWorkoutView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
                 Spacer()
-                // Timer
+                // Timer - shows elapsed time excluding paused periods
                 Text(formatTime(workoutManager.elapsedSeconds))
                     .font(.custom("dogica pixel", size: 32))
                     .foregroundColor(Color(hex: "#1A0F23"))
                     .padding(.bottom, 32)
+                
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
-            workoutManager.requestAuthorization()
-            workoutManager.selectedWorkout = .walking
-            workoutManager.startWorkout()
+            // ONLY START WORKOUT IF NOT ALREADY STARTED
+            if workoutManager.session == nil {
+                workoutManager.requestAuthorization()
+                workoutManager.selectedWorkout = .walking
+                workoutManager.startWorkout()
+            }
+        }
+    }
+    
+    // HELPER FUNCTIONS FOR ANIMATION CONTROL
+    private func startCloudAnimation(geometry: GeometryProxy) {
+        // Only start animation if workout is running and not paused
+        guard workoutManager.running && !workoutManager.isPaused else { return }
+        withAnimation(.linear(duration: 500).repeatForever(autoreverses: false)) {
+            cloudAnimationOffset = -geometry.size.width * 2
+        }
+    }
+    
+    private func startGrassAnimation(geometry: GeometryProxy) {
+        // Only start animation if workout is running and not paused
+        guard workoutManager.running && !workoutManager.isPaused else { return }
+        withAnimation(.linear(duration: 75).repeatForever(autoreverses: false)) {
+            grassAnimationOffset = -geometry.size.width * 2
         }
     }
 }
 
+
+
 #Preview {
-    StartWorkoutView()
+    StartWorkoutView(workoutManager: WorkoutManager())
 }

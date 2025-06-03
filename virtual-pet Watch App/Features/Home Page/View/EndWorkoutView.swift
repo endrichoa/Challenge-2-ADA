@@ -1,34 +1,24 @@
-//
-//  EndWorkoutView.swift
-//  virtual-pet
-//
-//  Created by Shreyas Venadan on 22/5/2025.
-//
-
 import SwiftUI
 
 struct EndWorkoutView: View {
     
     @State var vm: HomeViewModel
     @ObservedObject var workoutManager: WorkoutManager
+    @Binding var selectedTab: Int // Add binding to control tab selection
     @State private var navigateSummaryView = false
 
     // button formatting
     let buttonSize: CGFloat = 80
 
-    
     var body: some View {
         
         ZStack {
-            
             
             Image("HomeScreen")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
                 .blur(radius: 2)
-            
-            
             
             VStack(spacing: 20) {
                 
@@ -37,15 +27,18 @@ struct EndWorkoutView: View {
                     VStack  {
                         
                         Button(action: {
-                            // Toggle between pause and resume based on current state
-                            if workoutManager.running {
+                            // Toggle between pause and resume based on current session state
+                            if workoutManager.canPauseWorkout() {
                                 workoutManager.pauseWorkout()
-                            } else {
+                            } else if workoutManager.canResumeWorkout() {
                                 workoutManager.resumeWorkout()
                             }
+                            // Automatically switch to StartWorkoutView tab
+                            selectedTab = 1
                         }) {
                             // Show different images based on workout state
-                            Image(workoutManager.running ? "pausebutton" : "playbutton")
+                            // Show pause button if workout can be paused, play button if it can be resumed
+                            Image(workoutManager.canPauseWorkout() ? "pausebutton" : "resumebutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
                         }
@@ -53,7 +46,7 @@ struct EndWorkoutView: View {
                         .disabled(!workoutManager.canPauseWorkout() && !workoutManager.canResumeWorkout())
                         
                         // Show different text based on workout state
-                        Text(workoutManager.running ? "Pause" : "Resume")
+                        Text(workoutManager.canPauseWorkout() ? "Pause" : "Resume")
                             .font(.custom("Dogica", size: 10, relativeTo: .title))
                             .foregroundColor(Color(hex: "#44211B"))
                         
@@ -76,10 +69,7 @@ struct EndWorkoutView: View {
                             .font(.custom("Dogica", size: 10, relativeTo: .title3))
                             .foregroundColor(Color(hex: "#44211B"))
                     }
-                    
                 }
-                
-                
                 
                 Button(action: vm.onOpenEditPage) {
                     VStack(spacing: 8) {
@@ -93,14 +83,18 @@ struct EndWorkoutView: View {
                 .tint(.black)
                 .buttonStyle(.plain)
                 .padding(.horizontal, 100)
+                
+
             }
         }
-        
     }
-    
 }
 
-
 #Preview {
-    EndWorkoutView(vm: HomeViewModel(), workoutManager: WorkoutManager())
+    @State var previewSelectedTab = 0
+    return EndWorkoutView(
+        vm: HomeViewModel(),
+        workoutManager: WorkoutManager(),
+        selectedTab: $previewSelectedTab
+    )
 }
