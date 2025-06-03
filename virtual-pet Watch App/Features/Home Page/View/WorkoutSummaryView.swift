@@ -8,134 +8,164 @@
 import SwiftUI
 
 struct WorkoutSummaryView: View {
-    @ObservedObject var workoutManager: WorkoutManager
-    @State var vm: HomeViewModel
-    @Environment(\.dismiss) var dismiss
+     @ObservedObject var workoutManager: WorkoutManager
+     @State var vm: HomeViewModel
+     @Environment(\.dismiss) private var dismiss
+    
     
     var body: some View {
+        
         ZStack {
-            Color(hex: "#69CCED")
+
+            Image("SummaryBackground")
+                .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
+                .blur(radius: 2)
+                
             
-            VStack(spacing: 5) {
+            ScrollView {
                 
-                // Title - much smaller
-                VStack(spacing: 2) {
-                    Text("WALK")
-                        .font(.custom("Dogica", size: 12))
-                        .foregroundColor(Color(hex: "#44211B"))
-                    
-                    Text("SUMMARY")
-                        .font(.custom("Dogica", size: 12))
-                        .foregroundColor(Color(hex: "#44211B"))
-                }
-                .padding(.bottom, 8)
-                
-                // Total Time - more compact
-                VStack(spacing: 3) {
-                    Text("TOTAL TIME")
-                        .font(.custom("Dogica", size: 8))
-                        .foregroundColor(Color(hex: "#44211B"))
-                    
-                    Text(formatDuration(seconds: workoutManager.elapsedSeconds))
-                        .font(.custom("Dogica", size: 16))
-                        .foregroundColor(Color(hex: "#44211B"))
-                }
-                .padding(.bottom, 10)
-                
-                // Metrics in compact rows
-                VStack(spacing: 8) {
-                    // Total Steps
-                    HStack {
-                        Text("TOTAL")
-                            .font(.custom("Dogica", size: 6))
-                            .foregroundColor(Color(hex: "#44211B"))
-                            .frame(width: 45, alignment: .leading)
-                        
-                        Text("\(workoutManager.totalSteps)")
-                            .font(.custom("Dogica", size: 12))
-                            .foregroundColor(Color(hex: "#44211B"))
-                        
-                        Text("STEPS")
-                            .font(.custom("Dogica", size: 6))
-                            .foregroundColor(Color(hex: "#44211B"))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                VStack {
+                // Header with exit button
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image("exiticon")
+                            .resizable()
+                            .frame(width: 24, height: 24)
                     }
-                    .padding(.horizontal, 15)
+                    .buttonStyle(.plain)
                     
-                    Text("STEPS")  // Second line for "TOTAL STEPS"
-                        .font(.custom("Dogica", size: 6))
-                        .foregroundColor(Color(hex: "#44211B"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.leading, 15)
-                        .offset(y: -8)
+                    Spacer()
+                }
+                .padding(.horizontal)
                     
-                    // Distance
-                    HStack {
-                        Text("DISTANCE")
-                            .font(.custom("Dogica", size: 6))
-                            .foregroundColor(Color(hex: "#44211B"))
-                            .frame(width: 60, alignment: .leading)
+                    // Title
+                    VStack(spacing: 5) {
+                        Text("WALK")
+                            .font(.custom("Dogica", size: 18, relativeTo: .title))
+                            .foregroundColor(.black)
                         
-                        Spacer()
-                        
-                        Text(String(format: "%.2f", workoutManager.totalDistance / 1000))
-                            .font(.custom("Dogica", size: 12))
-                            .foregroundColor(Color(hex: "#44211B"))
-                        
-                        Text("KM")
-                            .font(.custom("Dogica", size: 6))
-                            .foregroundColor(Color(hex: "#44211B"))
-                            .frame(width: 20, alignment: .trailing)
+                        Text("SUMMARY")
+                            .font(.custom("Dogica", size: 18, relativeTo: .title))
+                            .foregroundColor(.black)
                     }
-                    .padding(.horizontal, 15)
                     
-                    // Average Heart Rate
-                    HStack {
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text("AVERAGE")
-                                .font(.custom("Dogica", size: 6))
-                                .foregroundColor(Color(hex: "#44211B"))
-                            Text("HEART RATE")
-                                .font(.custom("Dogica", size: 6))
-                                .foregroundColor(Color(hex: "#44211B"))
+                    Spacer().frame(height: 15)
+                    
+                    // Coins gained
+                    VStack(spacing: 5) {
+                        Text("COINS GAINED")
+                            .font(.custom("Dogica", size: 10, relativeTo: .caption))
+                            .foregroundColor(.black)
+                        
+                        HStack(spacing: 8) {
+                            Image("coinicon")
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            
+                            Text("\(workoutManager.coinsEarned)")
+                                .font(.custom("Dogica", size: 16, relativeTo: .title2))
+                                .foregroundColor(.black)
                         }
-                        .frame(width: 60, alignment: .leading)
-                        
-                        Spacer()
-                        
-                        Text("\(Int(workoutManager.averageHeartRate))")
-                            .font(.custom("Dogica", size: 12))
-                            .foregroundColor(Color(hex: "#44211B"))
-                        
-                        Text("BPM")
-                            .font(.custom("Dogica", size: 6))
-                            .foregroundColor(Color(hex: "#44211B"))
-                            .frame(width: 25, alignment: .trailing)
                     }
-                    .padding(.horizontal, 15)
-                }
-                
-                Spacer()
-                
-                // Page indicator dots - smaller
-                HStack(spacing: 6) {
-                    Circle()
-                        .fill(Color.white)
-                        .frame(width: 6, height: 6)
                     
-                    Circle()
-                        .fill(Color.white.opacity(0.5))
-                        .frame(width: 6, height: 6)
+                    Spacer().frame(height: 8)
+                    
+                    // Total time
+                    VStack(spacing: 5) {
+                        Text("TOTAL TIME")
+                            .font(.custom("Dogica", size: 8, relativeTo: .caption))
+                            .foregroundColor(.black)
+                        
+                        Text(formatDuration(seconds: workoutManager.elapsedSeconds))
+                            .font(.custom("Dogica", size: 16, relativeTo: .title2))
+                            .foregroundColor(.black)
+                            .kerning(-1)
+                    }
+                    
+                    Spacer().frame(height: 15)
+                    
+                    // Stats grid
+                    VStack(spacing: 6) {
+                        
+                        // Total steps
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("TOTAL")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                                Text("STEPS")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                            }
+                            Spacer()
+
+                            
+                            Text(workoutManager.totalSteps.formatted())
+                                .font(.custom("Dogica", size: 16, relativeTo: .title2))
+                                .foregroundColor(.black)
+                        }
+                        .padding(.horizontal)
+                        
+                        // Distance
+                        HStack {
+                            Text("DISTANCE")
+                                .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                .foregroundColor(.black)
+                            
+                            Spacer()
+                            
+                            HStack(spacing: 4) {
+                                Text(String(format: "%.2f", workoutManager.totalDistanceInKM))
+                                    .font(.custom("Dogica", size: 16, relativeTo: .title2))
+                                    .foregroundColor(.black)
+                                
+                                Text("KM")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                            }
+                        }
+                        .padding(.horizontal)
+                        
+                        // Average heart rate
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text("AVERAGE")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                                Text("HEART RATE")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                            }
+                            
+                            Spacer()
+                            
+                            HStack(spacing: 4) {
+                                Text("\(Int(workoutManager.averageHeartRate))")
+                                    .font(.custom("Dogica", size: 16, relativeTo: .title2))
+                                    .foregroundColor(.black)
+                                
+                                Text("BPM")
+                                    .font(.custom("Dogica", size: 10, relativeTo: .caption2))
+                                    .foregroundColor(.black)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    
+                    Spacer()
+                    
                 }
-                .padding(.bottom, 10)
-            }
-            .padding(.horizontal, 8)
-            .onAppear {
-                vm.addSteps(workoutManager.totalSteps)
+                .padding()
             }
         }
+        .navigationBarHidden(true)
     }
+
+    
     
     // Format duration from seconds to HH:MM:SS or MM:SS for shorter workouts
     private func formatDuration(seconds: Int) -> String {
@@ -150,6 +180,8 @@ struct WorkoutSummaryView: View {
         }
     }
 }
+
+
 
 
 #Preview {

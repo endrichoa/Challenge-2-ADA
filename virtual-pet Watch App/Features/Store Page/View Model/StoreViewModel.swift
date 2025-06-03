@@ -18,4 +18,5 @@ class StoreViewModel {
         coins -= item.price
         UserDefaults.standard.set(coins, forKey: "coins")
     }
+    
 }
