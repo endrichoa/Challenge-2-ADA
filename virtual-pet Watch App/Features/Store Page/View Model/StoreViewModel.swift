@@ -25,4 +25,5 @@ class StoreViewModel {
         guard let homeVM = homeVM else { return }
         homeVM.hungerLevel = min(homeVM.hungerLevel + item.energy, 100)
     }
+    
 }
