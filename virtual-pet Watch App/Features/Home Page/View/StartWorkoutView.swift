@@ -1,7 +1,11 @@
 import SwiftUI
 
 struct StartWorkoutView: View {
-    @ObservedObject var workoutManager: WorkoutManager // CHANGED FROM @StateObject
+    @StateObject var workoutManager = WorkoutManager()
+    @State private var dogFrame = 1
+    @State private var dogTimer: Timer? = nil
+    let dogFrameCount = 4
+    let dogAnimationInterval = 0.18
     @State private var animationOffset: CGFloat = 0
     @State private var cloudAnimationOffset: CGFloat = -100
     @State private var grassAnimationOffset: CGFloat = -300
@@ -107,19 +111,25 @@ struct StartWorkoutView: View {
                             .fontWeight(.bold)
                             .foregroundColor(Color(red: 0.22, green: 0.11, blue: 0.09))
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    
-                    // Dog character - changes based in workout state
-                    Image("dogChar") // You can add pause state later: workoutManager.isPaused ? "dogCharPaused" : "dogChar"
+                    .frame(width: 40)
+                    Spacer(minLength: 0)
+                    // Animated dog
+                    Image("DogWalk\(dogFrame)")
+                        .resizable()
                         .interpolation(.none)
                         .scaledToFit()
-                        .frame(width: 91, height: 60)
-                        .padding(.horizontal, 8)
-                        .opacity(workoutManager.isPaused ? 0.7 : 1.0)
-                    
-                    VStack(spacing: 4) {
-                        Text(formatDistance(workoutManager.distance))
-                            .font(.custom("dogica pixel", size: 14))
+                        .frame(width: 110, height: 100)
+                        .scaleEffect(x:-1, y:1)
+                        .offset(y: 8)
+                    Spacer(minLength: 0)
+                    VStack(spacing: 2) {
+                        Text("\(formatDistance(workoutManager.distance))")
+                            .font(.custom("dogica pixel", size: 11))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "#1A0F23"))
+                        Text("KM")
+                            .font(.custom("dogica pixel", size: 10))
+                            .fontWeight(.bold)
                             .foregroundColor(Color(hex: "#1A0F23"))
                     }
                     .frame(width: 40)
@@ -143,10 +153,14 @@ struct StartWorkoutView: View {
                 workoutManager.requestAuthorization()
                 workoutManager.selectedWorkout = .walking
                 workoutManager.startWorkout()
+                startDogAnimation()
             }
         }
+        .onDisappear {
+            stopDogAnimation()
+        }
     }
-    
+
     // HELPER FUNCTIONS FOR ANIMATION CONTROL
     private func startCloudAnimation(geometry: GeometryProxy) {
         // Only start animation if workout is running and not paused
@@ -162,6 +176,17 @@ struct StartWorkoutView: View {
         withAnimation(.linear(duration: 75).repeatForever(autoreverses: false)) {
             grassAnimationOffset = -geometry.size.width * 2
         }
+    }
+    
+    private func startDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = Timer.scheduledTimer(withTimeInterval: dogAnimationInterval, repeats: true) { _ in
+            dogFrame = dogFrame % dogFrameCount + 1
+        }
+    }
+    private func stopDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = nil
     }
 }
 

@@ -15,8 +15,17 @@ struct StoreView: View {
         GridItem(.flexible())
     ]
     
-    var body: some View {
+    @State private var storeVM: StoreViewModel
+    let homeVM: HomeViewModel
+    
+    init(homeVM: HomeViewModel) {
+        self.homeVM = homeVM
         let vm = StoreViewModel()
+        vm.homeVM = homeVM
+        _storeVM = State(initialValue: vm)
+    }
+    
+    var body: some View {
         ScrollView {
             VStack(alignment: .trailing, spacing: 8) {
                 HStack {
@@ -29,7 +38,7 @@ struct StoreView: View {
                             Image("coin-placeholder")
                                 .resizable()
                                 .frame(width: 72, height: 24)
-                            Text("\(vm.coins)")
+                            Text("\(storeVM.coins)")
                                 .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
                                 .fontWeight(.bold)
                                 .foregroundStyle(.black)
@@ -43,10 +52,10 @@ struct StoreView: View {
                 .padding(.horizontal, 16)
                 VStack {
                     LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(vm.items) { item in
+                        ForEach(storeVM.items) { item in
                             NavigationLink(
                                 destination: BuyItemView(
-                                    vm: vm,
+                                    vm: storeVM,
                                     item: item
                                 )
                             ) {

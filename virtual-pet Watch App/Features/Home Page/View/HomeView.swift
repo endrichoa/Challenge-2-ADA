@@ -14,6 +14,10 @@ struct HomeView: View {
     @State private var viewModel = HomeViewModel()
     @StateObject private var walkDetectionManager = WalkDetectionManager()
     @State private var showWalkDetection = false
+    @State private var navigateToWorkout = false
+    @State private var showCountdown = false
+    @State private var countdownValue = 3
+    @State private var countdownProgress: CGFloat = 1.0
     
     var body: some View {
         TabView(selection: $viewModel.selectedTab) {
@@ -52,6 +56,39 @@ struct HomeView: View {
         }
         .onDisappear {
             walkDetectionManager.stopDetection()
+        }
+        .onChange(of: navigateToWorkout) { newValue in
+            if newValue {
+                walkDetectionManager.stopDetection()
+            } else {
+                walkDetectionManager.startDetection()
+            }
+        }
+        .onChange(of: showCountdown) { newValue in
+            if newValue {
+                runCountdown()
+            }
+        }
+    }
+    
+    private func runCountdown() {
+        WKInterfaceDevice.current().play(.start)
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            if countdownValue > 1 {
+                countdownValue -= 1
+                countdownProgress -= 1.0 / 3.0
+                WKInterfaceDevice.current().play(.directionUp)
+            } else {
+                timer.invalidate()
+                showCountdown = false
+                navigateToWorkout = true
+                showWalkDetection = false
+                WKInterfaceDevice.current().play(.success)
+                
+                // Reset countdown for next time
+                countdownValue = 3
+                countdownProgress = 1.0
+            }
         }
     }
 }

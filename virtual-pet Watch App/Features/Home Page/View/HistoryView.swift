@@ -13,7 +13,10 @@ struct HistoryView: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "#2e2c3d").ignoresSafeArea()
+            Image("HistoryScreen")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
             ScrollView {
                 VStack(spacing: 16) {
                     Spacer().frame(height: 8)
@@ -63,9 +66,14 @@ struct HistoryView: View {
                             .kerning(1)
                     }
                     // Weekly Chart
-                    ChartView(data: vm.weeklyData, maxSteps: vm.weeklyData.map{$0.steps}.max() ?? 1)
-                        .frame(height: 90)
-                        .frame(maxWidth: .infinity)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(Color.black.opacity(0.25))
+                        ChartView(data: vm.weeklyData, maxSteps: vm.weeklyData.map{$0.steps}.max() ?? 1)
+                    }
+                    .frame(height: 130)
+                    .padding(.horizontal, 5) // Add horizontal padding to the chart container
+                
                     Spacer()
                 }
                 .padding()
@@ -88,15 +96,16 @@ struct ChartView: View {
     var body: some View {
         VStack(spacing: 0) {
             GeometryReader { geo in
-                let width = geo.size.width
+                let chartWidth = geo.size.width - 50 // Leave space for Y-axis labels
                 let height = geo.size.height
-                let pointSpacing = width / CGFloat(max(data.count - 1, 1))
-                let yTicks: [CGFloat] = [0, 0.666, 1.0] // 0, 4k, 6k (normalized)
-                let yLabels: [String] = ["0", "4.000", "6.000"]
+                let pointSpacing = chartWidth / CGFloat(max(data.count - 1, 1))
+                let yTicks: [CGFloat] = [0, 0.5, 1.0] // 0, 4k, 6k (normalized)
+                let yLabels: [String] = ["0", "4.000", "8.000"]
                 let yMax: CGFloat = max(CGFloat(maxSteps), 6000)
+                let leftOffset: CGFloat = 8
                 let stepPoints = data.enumerated().map { idx, entry in
                     CGPoint(
-                        x: CGFloat(idx) * pointSpacing,
+                        x: leftOffset + CGFloat(idx) * pointSpacing,
                         y: height - (CGFloat(entry.steps) / yMax) * height
                     )
                 }
@@ -104,17 +113,19 @@ struct ChartView: View {
                     // Chart box
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(Color(hex: "#FDFEFE").opacity(0.3), lineWidth: 1)
+                        .frame(width: chartWidth + 16, height: height)
+                        .position(x: geo.size.width/2 - 17, y: height/2)
                     // Grid lines
-                    ForEach(0..<yTicks.count, id: \ .self) { i in
+                    ForEach(0..<yTicks.count, id: \.self) { i in
                         let y = height - yTicks[i] * height
                         Path { path in
-                            path.move(to: CGPoint(x: 0, y: y))
-                            path.addLine(to: CGPoint(x: width, y: y))
+                            path.move(to: CGPoint(x: leftOffset, y: y))
+                            path.addLine(to: CGPoint(x: leftOffset + chartWidth, y: y))
                         }
                         .stroke(Color(hex: "#FDFEFE").opacity(0.2), style: StrokeStyle(lineWidth: 1, dash: [4, 4]))
                     }
-                    ForEach(data.indices, id: \ .self) { i in
-                        let x = CGFloat(i) * pointSpacing
+                    ForEach(data.indices, id: \.self) { i in
+                        let x = leftOffset + CGFloat(i) * pointSpacing
                         Path { path in
                             path.move(to: CGPoint(x: x, y: 0))
                             path.addLine(to: CGPoint(x: x, y: height))
@@ -131,41 +142,44 @@ struct ChartView: View {
                     }
                     .stroke(Color(hex: "#FDFEFE"), style: StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
                     // White dots
-                    ForEach(stepPoints.indices, id: \ .self) { idx in
+                    ForEach(stepPoints.indices, id: \.self) { idx in
                         let pt = stepPoints[idx]
                         Circle()
                             .fill(Color(hex: "#FDFEFE"))
                             .frame(width: 6, height: 6)
                             .position(pt)
                     }
-                    // Y-axis labels (right, outside)
+                    // Y-axis labels (right side)
                     VStack {
-                        ForEach(yTicks.indices.reversed(), id: \ .self) { i in
+                        ForEach(yTicks.indices.reversed(), id: \.self) { i in
                             Spacer(minLength: i == yTicks.count-1 ? 0 : nil)
                             Text(yLabels[i])
-                                .font(.custom("Dogica Pixel", size: 10))
+                                .font(.custom("Dogica Pixel", size: 7))
                                 .foregroundColor(Color(hex: "#FDFEFE").opacity(0.7))
-                                .frame(width: 40, alignment: .trailing)
+                                .fontWeight(.medium)
                         }
                     }
-                    .frame(width: width + 40, height: height, alignment: .trailing)
+                    .frame(width: 35, height: height)
+                    .position(x: geo.size.width - 10, y: height/2)
                 }
             }
             .frame(height: 110)
-            .frame(maxWidth: .infinity)
             HStack(spacing: 0) {
-                ForEach(data.indices, id: \ .self) { idx in
+                Spacer().frame(width: 8) // Match left offset
+                ForEach(data.indices, id: \.self) { idx in
                     let weekdayInitial = weekdayInitialFromDateString(data[idx].date)
                     Text(weekdayInitial)
-                        .font(.custom("Dogica Pixel", size: 12))
+                        .font(.custom("Dogica Pixel", size: 10))
                         .foregroundColor(Color(hex: "#FDFEFE"))
                         .frame(maxWidth: .infinity)
                 }
+                Spacer().frame(width: 43) // Account for Y-axis labels space
             }
             .padding(.top, 2)
-            .frame(maxWidth: .infinity)
         }
+        .padding(.horizontal, 8) // Add internal padding to the chart view
     }
+    
     func weekdayInitialFromDateString(_ dateString: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM"

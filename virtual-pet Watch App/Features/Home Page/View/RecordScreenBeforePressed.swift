@@ -19,6 +19,10 @@ struct RecordScreenBeforeView: View {
     @State private var countdownProgress: CGFloat = 1.0
     @State private var showWalkDetection = false
     @State private var walkDetectionManager = WalkDetectionManager()
+    @State private var dogFrame = 1
+    @State private var dogTimer: Timer? = nil
+    let dogIdleFrameCount = 2
+    let dogAnimationInterval = 0.5
     
     var body: some View {
         ZStack {
@@ -44,11 +48,13 @@ struct RecordScreenBeforeView: View {
                     .padding(.bottom, 18)
                     .padding(.horizontal, 8)
                 Spacer()
-                Image("dogChar")
+                Image("DogIdle\(dogFrame)")
                     .interpolation(.none)
                     .scaledToFit()
                     .frame(width: 90, height: 45)
                     .padding(.bottom, 24)
+                    .scaleEffect(x: -1.6, y: 1.6)
+
                 let stepsRemaining = viewModel.dailyTarget - viewModel.totalSteps
                 Text(stepsRemaining > 0 ? "\(stepsRemaining) STEPS REMAINING" : "COMPLETED")
                     .font(.custom("dogica", size: 10))
@@ -57,6 +63,7 @@ struct RecordScreenBeforeView: View {
                     .foregroundColor(Color(hex: "#1A0F23"))
                     .padding(.bottom, 8)
                     .padding(.horizontal, 8)
+                    .kerning(-2)
                 VStack(spacing: 8) {
                     ProgressView(value: viewModel.progressBarPercentage)
                 }
@@ -78,6 +85,7 @@ struct RecordScreenBeforeView: View {
             // Walk detection
             .alert("Are you walking?", isPresented: $showWalkDetection) {
                 Button("Start Workout", role: .none) {
+                    startCountdown()
                     path.append(.workout)
                 }
                 Button("Not Now", role: .cancel) {}
@@ -116,9 +124,11 @@ struct RecordScreenBeforeView: View {
             walkDetectionManager.startDetection()
             viewModel.fetchSteps()
             viewModel.updateSteps()
+            startDogAnimation()
         }
         .onDisappear {
             walkDetectionManager.stopDetection()
+            stopDogAnimation()
         }
         .onChange(of: showCountdown) { newValue in
             if newValue {
@@ -143,10 +153,24 @@ struct RecordScreenBeforeView: View {
             } else {
                 timer.invalidate()
                 showCountdown = false
+                navigateToWorkout = true
+                showWalkDetection = false
                 path.append(.workout)
                 WKInterfaceDevice.current().play(.success)
             }
         }
+    }
+    
+    private func startDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = Timer.scheduledTimer(withTimeInterval: dogAnimationInterval, repeats: true) { _ in
+            dogFrame = dogFrame % dogIdleFrameCount + 1
+        }
+    }
+    
+    private func stopDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = nil
     }
 }
 
