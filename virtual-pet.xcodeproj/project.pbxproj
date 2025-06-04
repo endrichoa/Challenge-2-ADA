@@ -352,7 +352,6 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need health permission to update step count.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -392,7 +391,6 @@
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "We need health permission to update step count.";
 				INFOPLIST_KEY_NSMotionUsageDescription = "We need to access motion usage to detect your step count.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

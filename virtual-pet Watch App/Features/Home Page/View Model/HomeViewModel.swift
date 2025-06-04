@@ -26,8 +26,14 @@ class HomeViewModel {
     }
     
     // Pet stats
-    var happinessLevel: Int = 80
-    var hungerLevel: Int = 60
+    var happinessLevel: Int {
+        let stepsContribution = Int((Double(totalSteps) / Double(dailyTarget)) * 50) // 50% from steps
+        let foodContribution = Int((Double(hungerLevel) / 100.0) * 30) // 30% from food
+        let pettingContribution = min(pettingCount * 4, 20) // 20% from petting, max 20%
+        return min(stepsContribution + foodContribution + pettingContribution, 100)
+    }
+    var hungerLevel: Int = 10
+    var pettingCount: Int = 0
     
     // Page navigations
     var selectedTab: Int = 1
@@ -96,5 +102,11 @@ class HomeViewModel {
          loadSteps()
      }
     
-
+    func addPetting() {
+        pettingCount += 1
+        // Reset petting count after 24 hours
+        DispatchQueue.main.asyncAfter(deadline: .now() + 86400) {
+            self.pettingCount = 0
+        }
+    }
 }
