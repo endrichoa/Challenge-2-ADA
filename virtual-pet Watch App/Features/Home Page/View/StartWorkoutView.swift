@@ -6,7 +6,6 @@ struct StartWorkoutView: View {
     @State private var dogTimer: Timer? = nil
     let dogFrameCount = 4
     let dogAnimationInterval = 0.18
-    @ObservedObject var workoutManager: WorkoutManager // CHANGED FROM @StateObject
     @State private var animationOffset: CGFloat = 0
     @State private var cloudAnimationOffset: CGFloat = -100
     @State private var grassAnimationOffset: CGFloat = -300
@@ -121,6 +120,7 @@ struct StartWorkoutView: View {
                         .scaledToFit()
                         .frame(width: 110, height: 100)
                         .scaleEffect(x:-1, y:1)
+                        .offset(y: 8)
                     Spacer(minLength: 0)
                     VStack(spacing: 2) {
                         Text("\(formatDistance(workoutManager.distance))")
@@ -153,19 +153,14 @@ struct StartWorkoutView: View {
                 workoutManager.requestAuthorization()
                 workoutManager.selectedWorkout = .walking
                 workoutManager.startWorkout()
+                startDogAnimation()
             }
-        }
-    }
-        .onAppear {
-            workoutManager.requestAuthorization()
-            workoutManager.selectedWorkout = .walking
-            workoutManager.startWorkout()
-            startDogAnimation()
         }
         .onDisappear {
             stopDogAnimation()
         }
     }
+
     // HELPER FUNCTIONS FOR ANIMATION CONTROL
     private func startCloudAnimation(geometry: GeometryProxy) {
         // Only start animation if workout is running and not paused
@@ -180,7 +175,6 @@ struct StartWorkoutView: View {
         guard workoutManager.running && !workoutManager.isPaused else { return }
         withAnimation(.linear(duration: 75).repeatForever(autoreverses: false)) {
             grassAnimationOffset = -geometry.size.width * 2
-            }
         }
     }
     

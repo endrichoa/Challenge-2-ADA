@@ -59,7 +59,7 @@ struct PetView: View {
                         triggerHappyDog()
                         vm.addPetting()
                     }
-                    .offset(y:25)
+                    .offset(y:35)
                 
                 // Spacer to push progress bars down
                 Spacer()
