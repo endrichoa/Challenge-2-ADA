@@ -9,6 +9,10 @@ import SwiftUI
 
 struct StartWorkoutView: View {
     @StateObject var workoutManager = WorkoutManager()
+    @State private var dogFrame = 1
+    @State private var dogTimer: Timer? = nil
+    let dogFrameCount = 4
+    let dogAnimationInterval = 0.18
     
     // Format seconds to HH:mm:ss
     func formatTime(_ seconds: Int) -> String {
@@ -65,11 +69,13 @@ struct StartWorkoutView: View {
                     }
                     .frame(width: 40)
                     Spacer(minLength: 0)
-                    Image("dogChar")
+                    // Animated dog
+                    Image("DogWalk\(dogFrame)")
+                        .resizable()
                         .interpolation(.none)
                         .scaledToFit()
-                        .frame(width: 80, height: 45)
-                        .padding(.horizontal, 0)
+                        .frame(width: 110, height: 100)
+                        .scaleEffect(x:-1, y:1)
                     Spacer(minLength: 0)
                     VStack(spacing: 2) {
                         Text("\(formatDistance(workoutManager.distance))")
@@ -98,7 +104,22 @@ struct StartWorkoutView: View {
             workoutManager.requestAuthorization()
             workoutManager.selectedWorkout = .walking
             workoutManager.startWorkout()
+            startDogAnimation()
         }
+        .onDisappear {
+            stopDogAnimation()
+        }
+    }
+    
+    private func startDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = Timer.scheduledTimer(withTimeInterval: dogAnimationInterval, repeats: true) { _ in
+            dogFrame = dogFrame % dogFrameCount + 1
+        }
+    }
+    private func stopDogAnimation() {
+        dogTimer?.invalidate()
+        dogTimer = nil
     }
 }
 

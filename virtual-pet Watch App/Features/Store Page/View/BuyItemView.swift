@@ -15,6 +15,8 @@ struct BuyItemView: View {
     var body: some View {
         VStack(spacing: 8) {
             Text("\(item.name.uppercased())")
+                .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+                .fontWeight(.bold)
             Image("\(item.image)")
                 .resizable()
                 .frame(width: 80, height: 80)
@@ -31,8 +33,12 @@ struct BuyItemView: View {
             ) {
                 HStack {
                     Text("BUY")
+                        .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+                        .fontWeight(.bold)
                     Image("Coin")
                     Text("\(item.price)")
+                        .font(.custom("Dogica Pixel", size: 10, relativeTo: .caption))
+                        .fontWeight(.bold)
                 }
             }
         }

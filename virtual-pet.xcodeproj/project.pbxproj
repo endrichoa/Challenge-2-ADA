@@ -39,19 +39,6 @@
 		B5DC4B182DD712E0005507A5 /* virtual-pet Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "virtual-pet Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		14EC06CD2DDE81790064590B /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Fonts/dogica.ttf,
-				Fonts/dogicabold.ttf,
-				Fonts/dogicapixel.ttf,
-				Fonts/dogicapixelbold.ttf,
-			);
-			target = B5DC4B072DD712E0005507A5 /* virtual-pet */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B5DC4B0A2DD712E0005507A5 /* virtual-pet */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -60,9 +47,6 @@
 		};
 		B5DC4B1C2DD712E0005507A5 /* virtual-pet Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				14EC06CD2DDE81790064590B /* Exceptions for "virtual-pet Watch App" folder in "virtual-pet" target */,
-			);
 			path = "virtual-pet Watch App";
 			sourceTree = "<group>";
 		};
@@ -364,12 +348,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "virtual-pet needs access to your health data to track workouts";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "virtual-pet needs to save your workout data to HealthKit";
-				INFOPLIST_KEY_NSMotionUsageDescription = "virtual-pet needs motion access to track your steps count";
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "PawPal need to share data from HealthKit";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "PawPal need to update data from HealthKit";
+				INFOPLIST_KEY_NSMotionUsageDescription = "PawPal need to use data from motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -405,12 +387,10 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "virtual-pet-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "virtual-pet";
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "virtual-pet needs access to your health data to track workouts";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "virtual-pet needs to save your workout data to HealthKit";
-				INFOPLIST_KEY_NSMotionUsageDescription = "virtual-pet needs motion access to track your steps count";
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "PawPal need to share data from HealthKit";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "PawPal need to update data from HealthKit";
+				INFOPLIST_KEY_NSMotionUsageDescription = "PawPal need to use data from motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "shimpact.virtual-pet";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
