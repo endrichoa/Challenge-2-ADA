@@ -15,15 +15,7 @@ struct StoreView: View {
         GridItem(.flexible())
     ]
     
-    @State private var storeVM: StoreViewModel
-    let homeVM: HomeViewModel
-    
-    init(homeVM: HomeViewModel) {
-        self.homeVM = homeVM
-        let vm = StoreViewModel()
-        vm.homeVM = homeVM
-        _storeVM = State(initialValue: vm)
-    }
+    @State private var storeVM: StoreViewModel = StoreViewModel()
     
     var body: some View {
         ScrollView {

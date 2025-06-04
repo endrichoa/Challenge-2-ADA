@@ -153,7 +153,6 @@ struct RecordScreenBeforeView: View {
             } else {
                 timer.invalidate()
                 showCountdown = false
-                navigateToWorkout = true
                 showWalkDetection = false
                 path.append(.workout)
                 WKInterfaceDevice.current().play(.success)

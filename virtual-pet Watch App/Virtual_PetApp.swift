@@ -13,7 +13,8 @@ struct virtual_pet_Watch_AppApp: App {
         UserDefaults.standard.register(
             defaults: [
                 "daily_target": 20000,
-                "coins": 20
+                "coins": 20,
+                "hunger": 10
             ]
         )
     }

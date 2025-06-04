@@ -32,7 +32,7 @@ class HomeViewModel {
         let pettingContribution = min(pettingCount * 4, 20) // 20% from petting, max 20%
         return min(stepsContribution + foodContribution + pettingContribution, 100)
     }
-    var hungerLevel: Int = 10
+    var hungerLevel: Int = UserDefaults.standard.integer(forKey: "hunger")
     var pettingCount: Int = 0
     
     // Page navigations
