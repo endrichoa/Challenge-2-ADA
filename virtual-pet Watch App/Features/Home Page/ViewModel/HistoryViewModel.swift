@@ -1,12 +1,6 @@
 import Foundation
 import SwiftUI
 
-struct StepDay: Identifiable {
-    let id = UUID()
-    let date: Date
-    let steps: Int
-}
-
 class HistoryViewModel: ObservableObject {
     @Published var currentStreak: Int = 0
     @Published var goalsReached: Int = 0

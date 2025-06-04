@@ -9,6 +9,8 @@ import SwiftUI
 import WatchKit
 
 struct HomeView: View {
+    @Binding var path: [Routes]
+    
     @State private var viewModel = HomeViewModel()
     @StateObject private var walkDetectionManager = WalkDetectionManager()
     @State private var showWalkDetection = false
@@ -18,75 +20,31 @@ struct HomeView: View {
     @State private var countdownProgress: CGFloat = 1.0
     
     var body: some View {
-        NavigationStack {
-            TabView(selection: $viewModel.selectedTab) {
-                RecordScreenBeforeView(navigateToWorkout: $navigateToWorkout)
-                    .tag(0)
-                
-                TabView {
-                    // Main pet view with improved layout
-                    PetView(vm: viewModel)
-                        .ignoresSafeArea(.all) // Ensure full screen usage
-                    
-                    HistoryView(
-                        vm: HistoryViewModel(dailyGoal: viewModel.dailyTarget, last7Days: []),
-                        dailyGoal: viewModel.dailyTarget
-                    )
-                }
-                .tabViewStyle(.verticalPage)
-                .tag(1)
+        TabView(selection: $viewModel.selectedTab) {
+            RecordScreenBeforeView(path: $path)
+                .tag(0)
+            TabView {
+                PetView(path: $path, vm: viewModel)
+                HistoryView(vm: HistoryViewModel(dailyGoal: viewModel.dailyTarget, last7Days: []), dailyGoal: viewModel.dailyTarget)
             }
-            .tabViewStyle(.page)
-            .ignoresSafeArea(.all) // Full screen for TabView
-            .onAppear() {
-                viewModel.fetchSteps()
-                viewModel.updateSteps()
-                if !navigateToWorkout {
-                    walkDetectionManager.startDetection()
-                }
+            .tabViewStyle(.verticalPage)
+            .tag(1)
+        }
+        .tabViewStyle(.page)
+        .onAppear() {
+            viewModel.fetchSteps()
+            viewModel.updateSteps()
+            walkDetectionManager.startDetection()
+        }
+        .navigationDestination(isPresented: $viewModel.openEditPage) {
+            EditTargetView(vm: viewModel)
+        }
+        .confirmationDialog("Start your walk?", isPresented: $showWalkDetection) {
+            Button("Start", role: .none) {
+                walkDetectionManager.stopDetection()
+                path.append(.workout)
             }
-            .navigationDestination(isPresented: $viewModel.openEditPage) {
-                EditTargetView(vm: viewModel)
-            }
-            .alert("Are you walking?", isPresented: $showWalkDetection) {
-                Button("Start Workout", role: .none) {
-                    showCountdown = true
-                }
-                Button("Not Now", role: .cancel) {}
-            } message: {
-                Text("Would you like to record this walk?")
-            }
-            .navigationDestination(isPresented: $navigateToWorkout) {
-                WorkoutTabView()
-                    .onAppear {
-                        walkDetectionManager.stopDetection()
-                    }
-            }
-            
-            // Countdown overlay when starting workout
-            if showCountdown {
-                ZStack {
-                    // Blurred background
-                    Color.black.opacity(0.5)
-                        .ignoresSafeArea()
-                        .blur(radius: 10)
-                    // Animated green ring
-                    Circle()
-                        .trim(from: 0, to: countdownProgress)
-                        .stroke(
-                            AngularGradient(gradient: Gradient(colors: [Color.green, Color.green.opacity(0.7)]), center: .center),
-                            style: StrokeStyle(lineWidth: 16, lineCap: .round)
-                        )
-                        .rotationEffect(.degrees(-90))
-                        .frame(width: 120, height: 120)
-                        .animation(.linear(duration: 1), value: countdownProgress)
-                    // Countdown number
-                    Text("\(countdownValue)")
-                        .font(.custom("Dogica Pixel", size: 60))
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-            }
+            Button("Cancel", role: .cancel) {}
         }
         .fontWeight(.bold)
         .onAppear {
@@ -94,9 +52,7 @@ struct HomeView: View {
                 WKInterfaceDevice.current().play(.notification)
                 showWalkDetection = true
             }
-            if !navigateToWorkout {
-                walkDetectionManager.startDetection()
-            }
+            walkDetectionManager.startDetection()
         }
         .onDisappear {
             walkDetectionManager.stopDetection()
@@ -138,5 +94,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    HomeView(path: .constant([]))
 }

@@ -8,29 +8,23 @@
 import SwiftUI
 
 struct WorkoutSummaryView: View {
-     @ObservedObject var workoutManager: WorkoutManager
-     @State var vm: HomeViewModel
-     @Environment(\.dismiss) private var dismiss
-    
+    @Binding var path: [Routes]
+    @ObservedObject var workoutManager: WorkoutManager
     
     var body: some View {
-        
         ZStack {
-
             Image("SummaryBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
                 .blur(radius: 2)
-                
-            
             ScrollView {
                 
                 VStack {
                 // Header with exit button
                 HStack {
                     Button(action: {
-                        dismiss()
+                        path.removeAll()
                     }) {
                         Image("exiticon")
                             .resizable()
@@ -196,6 +190,6 @@ struct WorkoutSummaryView: View {
     workoutManager.totalDistance = 2540 // 2.54 km
     workoutManager.averageHeartRate = 104
     
-    return WorkoutSummaryView(workoutManager: workoutManager, vm: HomeViewModel())
+    return WorkoutSummaryView(path: .constant([.workout]), workoutManager: workoutManager)
     
 }

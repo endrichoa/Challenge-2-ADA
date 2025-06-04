@@ -153,8 +153,8 @@ struct StartWorkoutView: View {
                 workoutManager.requestAuthorization()
                 workoutManager.selectedWorkout = .walking
                 workoutManager.startWorkout()
-                startDogAnimation()
             }
+            startDogAnimation()
         }
         .onDisappear {
             stopDogAnimation()

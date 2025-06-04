@@ -8,20 +8,14 @@
 import SwiftUI
 
 struct StoreView: View {
+    @Binding var path: [Routes]
+    
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
-    @State private var storeVM: StoreViewModel
-    let homeVM: HomeViewModel
-    
-    init(homeVM: HomeViewModel) {
-        self.homeVM = homeVM
-        let vm = StoreViewModel()
-        vm.homeVM = homeVM
-        _storeVM = State(initialValue: vm)
-    }
+    @State private var storeVM: StoreViewModel = StoreViewModel()
     
     var body: some View {
         ScrollView {
@@ -99,5 +93,5 @@ struct StoreView: View {
 }
 
 #Preview {
-    StoreView(homeVM: HomeViewModel())
+    StoreView(path: .constant([.store]))
 }

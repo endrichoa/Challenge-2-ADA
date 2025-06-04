@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PetView: View {
+    @Binding var path: [Routes]
     @State var vm: HomeViewModel
     @State private var dogFrame = 1
     @State private var dogTimer: Timer? = nil
@@ -67,7 +68,7 @@ struct PetView: View {
                 
                 // Hunger and Happiness Progress Bars (positioned at bottom)
                 HStack(alignment: .bottom, spacing: 55) {
-                    NavigationLink(destination: StoreView(homeVM: vm)) {
+                    Button(action: { path.append(.store) }) {
                         VStack(spacing: 3) {
                             HungerProgressBar(progress: Double(vm.hungerLevel) / 100.0, size: CGSize(width: 25, height: 25))
                             Text("\(vm.hungerLevel)%")
@@ -156,6 +157,6 @@ struct PetView: View {
 }
 
 #Preview {
-    PetView(vm: HomeViewModel())
+    PetView(path: .constant([]), vm: HomeViewModel())
 }
 

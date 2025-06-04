@@ -12,6 +12,7 @@ struct virtual_petApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(\.font, .custom("Dogica Pixel", size: 14, relativeTo: .body))
         }
     }
 }

@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct WorkoutTabView: View {
+    @Binding var path: [Routes]
+    
     @StateObject private var workoutManager = WorkoutManager()
     @State private var vm = HomeViewModel()
     @State var selectedTab: Int = 1
@@ -9,7 +11,7 @@ struct WorkoutTabView: View {
         TabView(selection: $selectedTab) {
             
             // End Workout Tab
-            EndWorkoutView(vm: vm, workoutManager: workoutManager, selectedTab: $selectedTab)
+            EndWorkoutView(path: $path, vm: vm, workoutManager: workoutManager, selectedTab: $selectedTab)
                 .tag(0)
             
             // Start Workout Tab - PASS THE SAME INSTANCE
@@ -18,5 +20,6 @@ struct WorkoutTabView: View {
             
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+        .navigationBarBackButtonHidden()
     }
 }
