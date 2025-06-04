@@ -5,8 +5,8 @@
 //  Created by Hanna Nadia Savira on 03/06/25.
 //
 
-enum Route: Hashable {
+enum Routes: Hashable {
     case workout
-    case summary
+    case summary(workoutManager: WorkoutManager)
     case store
 }

@@ -10,7 +10,7 @@ import SwiftUI
 import WatchKit
 
 struct RecordScreenBeforeView: View {
-    @Binding var path: [Route]
+    @Binding var path: [Routes]
     
     @State private var viewModel = HomeViewModel()
     @State private var progress: Double = 0.65

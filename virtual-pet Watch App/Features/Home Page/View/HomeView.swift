@@ -9,7 +9,7 @@ import SwiftUI
 import WatchKit
 
 struct HomeView: View {
-    @Binding var path: [Route]
+    @Binding var path: [Routes]
     
     @State private var viewModel = HomeViewModel()
     @StateObject private var walkDetectionManager = WalkDetectionManager()

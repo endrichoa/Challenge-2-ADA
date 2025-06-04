@@ -122,7 +122,6 @@ class HealthKitHelper {
     
     func fetchWeeklySteps(completion: @escaping ([StepModel]) -> Void) {
         guard let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount) else {
-            print("1: error completion empty array")
             completion([])
             return
         }
@@ -141,20 +140,16 @@ class HealthKitHelper {
             anchorDate: calendar.startOfDay(for: now),
             intervalComponents: interval
         )
-        print("2: initialize query")
         query.initialResultsHandler = { query, results, error in
             var stepData: [StepModel] = []
             
             if let statsCollection = results {
-                print("3: enumerate statistics")
                 statsCollection.enumerateStatistics(from: startDate, to: now) { statistics, _ in
-                    print("4: append step")
                     let steps = statistics.sumQuantity()?.doubleValue(for: .count()) ?? 0
                     stepData.append(StepModel(date: statistics.startDate, stepCount: steps))
                 }
             }
             DispatchQueue.main.async {
-                print("6: call completion")
                 print("step data: $\(stepData)")
                 completion(stepData)
             }

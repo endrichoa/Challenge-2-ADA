@@ -8,20 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var path: [Route] = []
+    @State private var path: [Routes] = []
     
     var body: some View {
         NavigationStack(path: $path) {
             HomeView(path: $path)
-                .navigationDestination(for: Route.self) { route in
+                .navigationDestination(for: Routes.self) { route in
                     switch route {
                     case .workout:
-//                        WorkoutTabView(path: $path)
-                        WorkoutTabView()
+                        WorkoutTabView(path: $path)
                     case .store:
                         StoreView(path: $path)
-                    case .summary:
-                        StoreView(path: $path)
+                    case .summary(let workoutManager):
+                        WorkoutSummaryView(path: $path, workoutManager: workoutManager)
                     }
                 }
         }

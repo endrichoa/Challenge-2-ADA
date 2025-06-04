@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PetView: View {
-    @Binding var path: [Route]
+    @Binding var path: [Routes]
     @State var vm: HomeViewModel
     
     var body: some View {

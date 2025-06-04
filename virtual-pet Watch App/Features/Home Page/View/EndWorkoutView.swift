@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct EndWorkoutView: View {
+    @Binding var path: [Routes]
     
     @State var vm: HomeViewModel
     @ObservedObject var workoutManager: WorkoutManager
@@ -53,8 +54,7 @@ struct EndWorkoutView: View {
                     }
                     
                     VStack  {
-                        NavigationLink(destination: WorkoutSummaryView(workoutManager: workoutManager, vm: vm),
-                                       isActive: $navigateSummaryView) {
+                        Button(action: { path.append(.summary(workoutManager: workoutManager)) }) {
                             Image("endbutton")
                                 .resizable()
                                 .frame(width: buttonSize, height: buttonSize)
@@ -91,10 +91,10 @@ struct EndWorkoutView: View {
 }
 
 #Preview {
-    @State var previewSelectedTab = 0
-    return EndWorkoutView(
+    EndWorkoutView(
+        path: .constant([.workout]),
         vm: HomeViewModel(),
         workoutManager: WorkoutManager(),
-        selectedTab: $previewSelectedTab
+        selectedTab: .constant(0)
     )
 }
