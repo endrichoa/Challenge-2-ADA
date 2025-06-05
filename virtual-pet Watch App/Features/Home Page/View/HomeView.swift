@@ -57,14 +57,14 @@ struct HomeView: View {
         .onDisappear {
             walkDetectionManager.stopDetection()
         }
-        .onChange(of: navigateToWorkout) { newValue in
+        .onChange(of: navigateToWorkout) { _, newValue in
             if newValue {
                 walkDetectionManager.stopDetection()
             } else {
                 walkDetectionManager.startDetection()
             }
         }
-        .onChange(of: showCountdown) { newValue in
+        .onChange(of: showCountdown) { _, newValue in
             if newValue {
                 runCountdown()
             }

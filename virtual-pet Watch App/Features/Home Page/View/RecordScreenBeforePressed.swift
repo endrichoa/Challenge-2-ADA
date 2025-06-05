@@ -130,7 +130,7 @@ struct RecordScreenBeforeView: View {
             walkDetectionManager.stopDetection()
             stopDogAnimation()
         }
-        .onChange(of: showCountdown) { newValue in
+        .onChange(of: showCountdown) { _, newValue in
             if newValue {
                 runCountdown()
             }

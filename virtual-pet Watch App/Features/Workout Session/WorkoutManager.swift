@@ -294,7 +294,6 @@ class WorkoutManager: NSObject, ObservableObject {
     }
     
     func collectWorkoutSummary() {
-        guard let session = session else { return }
         workoutDate = Date()
         
         // Use the calculated elapsed time (excluding paused time)
